@@ -1,8 +1,11 @@
 //variable
-const listenPort = 50080
-const audioDevice = "BlackHole 2"
-const vvAddr = "localhost:50021"
-const vvVoice = "14"
+const listenPort = 50080;
+let playcmd = "mpv -";
+let voicevox = {
+	"address": "localhost",
+	"port"   : "50021",
+	"speaker": "14"
+};
 
 //require
 import fetch from "node-fetch";
@@ -20,7 +23,7 @@ import childProcess from 'child_process';
 //query - VOICEVOX		後で下のとfunctionまとめる
 async function vvQuery(textEnc){
 	console.log(textEnc);
-	let queryObj  = await fetch("http://"+vvAddr+"/audio_query?text="+textEnc+"&speaker="+vvVoice,{method: 'POST'});
+	let queryObj  = await fetch("http://"+voicevox.address+":"+voicevox.port+"/audio_query?text="+textEnc+"&speaker="+voicevox.speaker,{method: 'POST'});
 	let queryJson = await queryObj.json();
 	console.log(queryJson);
 	return queryJson;
@@ -28,7 +31,7 @@ async function vvQuery(textEnc){
 
 //synthesis - VOICEVOX
 async function vvSynth(query) {
-	let onsei = await fetch("http://"+vvAddr+"/synthesis?speaker="+vvVoice,
+	let onsei = await fetch("http://"+voicevox.address+":"+voicevox.port+"/synthesis?speaker="+voicevox.speaker,
 		{
 			method: 'POST',
 			headers: {
@@ -53,7 +56,7 @@ app.get("/talk", async function(req) {
 
 
 
-	let mpv = childProcess.exec("ffplay -autoexit -nodisp -", function(err, result) {
+	let mpv = childProcess.exec(playcmd, function(err, result) {
 		if (err) return console.log(err);
 		console.log(result);
 	});
