@@ -1,7 +1,7 @@
 //variable
 const listenPort = 50080
 const audioDevice = "BlackHole 2"
-const vvAddr = "10.0.1.4:50021"
+const vvAddr = "localhost:50021"
 const vvVoice = "14"
 
 //require
