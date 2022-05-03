@@ -1,5 +1,5 @@
 //variable
-const listenPort = 50080;
+const listenPort = 50080; //そのうちここもletに
 let playcmd = "mpv -";
 let voicevox = {
 	"address": "localhost",
