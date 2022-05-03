@@ -1,8 +1,7 @@
 //variable
-const listenPort = 50080; //やっぱりここはletにしない。
 let playcmd = "mpv -";
 let voicevoxSettings = {
-	"address": "localhost",
+	"address": "50080",
 	"port"   : "50021",
 	"speaker": "14"
 };
@@ -12,13 +11,49 @@ import fetch from "node-fetch";
 import express from "express";
 //import fs from 'fs';
 import childProcess from 'child_process';
+import p from 'process';
 
+//テスト用クソコード、考えるのがめんどくさかったからコピペしてる。
+//ちゃんと出来たら多分消す
+switch (p.argv.length){
+	case 6:
+		voicevoxSettings.speaker = p.argv[5];
+		voicevoxSettings.port = p.argv[4];
+		voicevoxSettings.address = p.argv[3];
+	case 5:
+		voicevoxSettings.port = p.argv[4];
+		voicevoxSettings.address = p.argv[3];
+	case 4:
+		voicevoxSettings.address = p.argv[3];
+}
 
 //setup
-	var app = express();
-	var server = app.listen(listenPort, function(){
-		console.log("Node.js is listening to PORT:" + server.address().port);
-	});
+//port
+const listenPort = setListenPort(p.argv[2]);	//まとめる書き方ありそう
+function setListenPort(port){
+	switch (isNaN(port)) {
+		case false:
+			if ( port >= 32768|| 
+				 port == 8008 || 	//https://ja.wikipedia.org/wiki/TCPやUDPにおけるポート番号の一覧
+				 port == 8080 || 	//上記に載っているHTTP Alternateなユーザポートと
+				 port == 8000 ||	//私がたまーに見かける8000番、
+				 port == 8081		//動的・私用ポートを指定している。
+			) {
+				return port;
+				break;
+			}else{
+				console.log("u must set 8000,8008,8080,8081 or over 32767 as port number.\ndefault port is 50080");
+			}
+		default:
+			if (isNaN(port)){console.log("Not a Number");}
+			return 50080;
+	}
+}
+//express
+var app = express();
+var server = app.listen(listenPort, function(){
+	console.log("nusuttoChan is listening to PORT:" + server.address().port);
+});
 
 //VOICEVOX		まとめた
 async function voicevoxProcess(textEnc){
