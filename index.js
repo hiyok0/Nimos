@@ -1,7 +1,7 @@
 //variable
-const listenPort = 50080; //そのうちここもletに
+const listenPort = 50080; //やっぱりここはletにしない。
 let playcmd = "mpv -";
-let voicevox = {
+let voicevoxSettings = {
 	"address": "localhost",
 	"port"   : "50021",
 	"speaker": "14"
@@ -20,24 +20,21 @@ import childProcess from 'child_process';
 		console.log("Node.js is listening to PORT:" + server.address().port);
 	});
 
-//query - VOICEVOX		後で下のとfunctionまとめる
-async function vvQuery(textEnc){
+//VOICEVOX		まとめた
+async function voicevoxProcess(textEnc){
+	//query
 	console.log(textEnc);
-	let queryObj  = await fetch("http://"+voicevox.address+":"+voicevox.port+"/audio_query?text="+textEnc+"&speaker="+voicevox.speaker,{method: 'POST'});
+	let queryObj  = await fetch("http://"+voicevoxSettings.address+":"+voicevoxSettings.port+"/audio_query?text="+textEnc+"&speaker="+voicevoxSettings.speaker,{method: 'POST'});
 	let queryJson = await queryObj.json();
 	console.log(queryJson);
-	return queryJson;
-}
-
-//synthesis - VOICEVOX
-async function vvSynth(query) {
-	let onsei = await fetch("http://"+voicevox.address+":"+voicevox.port+"/synthesis?speaker="+voicevox.speaker,
+	//synthesis
+	let onsei = await fetch("http://"+voicevoxSettings.address+":"+voicevoxSettings.port+"/synthesis?speaker="+voicevoxSettings.speaker,
 		{
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 				},
-			body: JSON.stringify(query)
+			body: JSON.stringify(queryJson)
 			}
 	);
 	return await onsei.arrayBuffer();
@@ -46,14 +43,10 @@ async function vvSynth(query) {
 //machi-uke 
 app.get("/talk", async function(req) {
 	console.log(req.query.text);
-	let textEnc = encodeURIComponent(req.query.text);
-	let queryJson = await vvQuery(textEnc);
-	let onseiArrayBuffer = await vvSynth(queryJson);
+	let onseiArrayBuffer = await voicevoxProcess(encodeURIComponent(req.query.text));
 	
 	
 	//await fs.writeFileSync( "./audio.wav" , new Uint8Array(onseiArrayBuffer), 'binary');
-
-
 
 
 	let mpv = childProcess.exec(playcmd, function(err, result) {
