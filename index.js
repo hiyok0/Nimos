@@ -1,7 +1,7 @@
 //variable
 let playcmd = "mpv -";
 let voicevoxSettings = {
-	"address": "50080",
+	"address": "localhost",
 	"port"   : "50021",
 	"speaker": "14"
 };
@@ -55,7 +55,7 @@ var server = app.listen(listenPort, function(){
 	console.log("nusuttoChan is listening to PORT:" + server.address().port);
 });
 
-//VOICEVOX		まとめた
+//VOICEVOX
 async function voicevoxProcess(textEnc){
 	//query
 	console.log(textEnc);
