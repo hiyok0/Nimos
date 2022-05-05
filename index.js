@@ -89,7 +89,7 @@ app.get("/talk", async function(req) {
 });
 
 function playSound () {
-	while (playQueue.length > 0 && playLock == false){		//聖徳太子モード考えるとswitchのほうが良かったかも
+	while (playQueue.length && !playLock){		//聖徳太子モード考えるとswitchのほうが良かったかも
 		playLock = true;
 		console.log("playQueue.length: "+playQueue.length);
 		let mpv = childProcess.exec(playcmd, function(err, result) {	//本当はspawnのほうが良いのかな？
