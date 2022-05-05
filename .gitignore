@@ -8,7 +8,8 @@ lerna-debug.log*
 
 #####
 gomi
-
+.
+.DS_Store
 #####
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

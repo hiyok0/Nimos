@@ -3,8 +3,10 @@ let playcmd = "mpv -";
 let voicevoxSettings = {
 	"address": "localhost",
 	"port"   : "50021",
-	"speaker": "14"
+	"speaker": "14"		//配列にして複数指定できても面白いかもしれない
 };
+let playQueue = [];
+let playLock = false;
 
 //require
 import fetch from "node-fetch";
@@ -83,11 +85,22 @@ app.get("/talk", async function(req) {
 	
 	//await fs.writeFileSync( "./audio.wav" , new Uint8Array(onseiArrayBuffer), 'binary');
 
-
-	let mpv = childProcess.exec(playcmd, function(err, result) {
-		if (err) return console.log(err);
-		console.log(result);
-	});
-	await mpv.stdin.write(new Uint8Array(onseiArrayBuffer));
-	await mpv.stdin.end();
+	await playQueue.push(new Uint8Array(onseiArrayBuffer));
 });
+
+function playSound () {
+	while (playQueue.length > 0 && playLock == false){		//聖徳太子モード考えるとswitchのほうが良かったかも
+		playLock = true;
+		console.log("playQueue.length: "+playQueue.length);
+		let mpv = childProcess.exec(playcmd, function(err, result) {	//本当はspawnのほうが良いのかな？
+			if (err) return console.log(err);
+			console.log(result);
+			playLock = false;
+		});
+		mpv.stdin.write(playQueue.shift());
+		mpv.stdin.end();
+	}
+}
+
+setInterval(playSound,500);
+
