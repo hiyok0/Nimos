@@ -4,6 +4,9 @@ import express from "express";
 import childProcess from 'child_process';
 import p from 'process';
 
+//
+//let playQueues = [];
+
 //express
 const listenPort = setListenPort(p.argv[2]);	//なんかまとめれない。　なんでぇ……？？？
 function setListenPort(port){					//SyntaxError: Unexpected token '.'
@@ -83,13 +86,18 @@ let playing = {
 	"command": "mpv -",
 	"queues":[],
 	"lock": false,
-	"main": async function(onseiArrayBuffer){
-		let saisei = childProcess.exec(playing.command, function(err, result) {
-			if (err) return console.log(err);
-			console.log(result);
-		});
-		await saisei.stdin.write(new Uint8Array(onseiArrayBuffer));
-		await saisei.stdin.end();
+	"intervalID": null,
+	"main": async function(){
+		while(playing.queues.length && !playing.lock){
+			playing.lock = true;
+			let saisei = childProcess.exec(playing.command, function(err, result) {
+				if (err) return console.log(err);
+				console.log(result);
+				playing.lock = false;
+			});
+			await saisei.stdin.write(playing.queues.shift());
+			await saisei.stdin.end();
+		}
 	}
 }
 //machi-uke 
@@ -97,6 +105,7 @@ app.get("/talk", async function(req) {
 	console.log(req.query.text);
 	let queryJson = await voicevox.start(req.query.text);
 	let onseiArrayBuffer = await voicevox.synthesis.process(queryJson);
-	playing.main(onseiArrayBuffer);
-	
+	await playing.queues.push(new Uint8Array(onseiArrayBuffer));
 });
+
+playing.intervalID = setInterval(playing.main,500);
