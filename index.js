@@ -40,13 +40,11 @@ let voicevox = {
 		"port"   : "50021",
 		"speaker": "14"
 	},
-	"query": {
-		"process": async function(text){
-			let queryObj  = await fetch("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/audio_query?text="+encodeURIComponent(text)+"&speaker="+voicevox.settings.speaker,{method: 'POST'});
-			let queryJson = await queryObj.json();
-			console.log(queryJson);
-			return queryJson;
-			}
+	"start": async function(text){
+		let queryObj  = await fetch("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/audio_query?text="+encodeURIComponent(text)+"&speaker="+voicevox.settings.speaker,{method: 'POST'});
+		let queryJson = await queryObj.json();
+		console.log(queryJson);
+		return queryJson;
 	},
 	"synthesis": {
 		"queues":[],
@@ -97,7 +95,7 @@ let playing = {
 //machi-uke 
 app.get("/talk", async function(req) {
 	console.log(req.query.text);
-	let queryJson = await voicevox.query.process(req.query.text);
+	let queryJson = await voicevox.start(req.query.text);
 	let onseiArrayBuffer = await voicevox.synthesis.process(queryJson);
 	playing.main(onseiArrayBuffer);
 	
