@@ -47,7 +47,7 @@ let voicevox = {
 		let queryObj  = await fetch("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/audio_query?text="+encodeURIComponent(text)+"&speaker="+voicevox.settings.speaker,{method: 'POST'});
 		let queryJson = await queryObj.json();
 		console.log(queryJson);
-		return queryJson;
+		return await voicevox.synthesis.process(queryJson);
 	},
 	"synthesis": {
 		"queues":[],
@@ -103,8 +103,7 @@ let playing = {
 //machi-uke 
 app.get("/talk", async function(req) {
 	console.log(req.query.text);
-	let queryJson = await voicevox.start(req.query.text);
-	let onseiArrayBuffer = await voicevox.synthesis.process(queryJson);
+	let onseiArrayBuffer = await voicevox.start(req.query.text);
 	await playing.queues.push(new Uint8Array(onseiArrayBuffer));
 });
 
