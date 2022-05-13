@@ -60,8 +60,8 @@ let voicevox = {
 		"process": function() {
 			while(voicevox.synthesis.queues.length && voicevox.synthesis.lock < voicevox.settings.lock ){
 				voicevox.synthesis.lock++;
-				console.log("Synthesis request sent!");
 				let query = voicevox.synthesis.queues.shift();
+				console.log("Synthesis request is being sent!");
 				axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/synthesis?speaker="+voicevox.settings.speaker,
 					query,
 					{"responseType": "arraybuffer"})
