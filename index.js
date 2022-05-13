@@ -62,7 +62,8 @@ let voicevox = {
 				voicevox.synthesis.lock++;
 				let query = voicevox.synthesis.queues.shift();
 				axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/synthesis?speaker="+voicevox.settings.speaker,
-					query)
+					query,
+					{"responseType": "arraybuffer"})
 				.then(res => {
 					console.log("synthesis:	["+res.request.res.statusCode+"]"+res.request.res.statusMessage);	//res.statusやres.statusTextでもいいっぽい？
 					voicevox.synthesis.lock--;
