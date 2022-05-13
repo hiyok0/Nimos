@@ -1,5 +1,6 @@
 //import
-import fetch from "node-fetch";
+//import post from "axios.post";
+import axios from "axios";
 import express from "express";
 import childProcess from 'child_process';
 import p from 'process';
@@ -41,28 +42,34 @@ let voicevox = {
 	"settings": {				//voicevoxの設定は全部ここに
 		"address": "localhost",
 		"port"   : "50021",
-		"speaker": "14"
+		"speaker": "14",
+		"lock"   : 1
 	},
-	"start": async function(text){
-		let queryObj  = await fetch("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/audio_query?text="+encodeURIComponent(text)+"&speaker="+voicevox.settings.speaker,{method: 'POST'});
-		let queryJson = await queryObj.json();
-		console.log(queryJson);
-		return await voicevox.synthesis.process(queryJson);
+	"start": function(text){
+		axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/audio_query?text="+encodeURIComponent(text)+"&speaker="+voicevox.settings.speaker)
+		.then(res => {
+			console.log(res.data);
+			voicevox.synthesis.queues.push(res.data);
+		})
+		.catch(err => {console.log("ERROR_audio_query \n"+err);});
 	},
 	"synthesis": {
 		"queues":[],
-		"lock": 1,
-		"process": async function(query) {
-			let onsei = await fetch("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/synthesis?speaker="+voicevox.settings.speaker,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-						},
-					body: JSON.stringify(query)
-					}
-			);
-			return await onsei.arrayBuffer();
+		"lock": 0,
+		"intervalID": null,
+		"process": function() {
+			while(voicevox.synthesis.queues.length && voicevox.synthesis.lock < voicevox.settings.lock ){
+				voicevox.synthesis.lock++;
+				let query = voicevox.synthesis.queues.shift();
+				axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/synthesis?speaker="+voicevox.settings.speaker,
+					query)
+				.then(res => {
+					console.log("synthesis:	["+res.request.res.statusCode+"]"+res.request.res.statusMessage);	//res.statusやres.statusTextでもいいっぽい？
+					voicevox.synthesis.lock--;
+					playing.queues.push(res.data);
+				})
+				.catch(err => {console.log("ERROR_synthesis \n:"+err);});
+			}
 		}
 	}
 }
@@ -101,10 +108,10 @@ let playing = {
 	}
 }
 //machi-uke 
-app.get("/talk", async function(req) {
+app.get("/talk", function(req) {
 	console.log(req.query.text);
-	let onseiArrayBuffer = await voicevox.start(req.query.text);
-	await playing.queues.push(new Uint8Array(onseiArrayBuffer));
+	voicevox.start(req.query.text);
 });
 
 playing.intervalID = setInterval(playing.main,500);
+voicevox.synthesis.intervalID = setInterval(voicevox.synthesis.process,1000);
