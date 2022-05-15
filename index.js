@@ -25,7 +25,7 @@ function setListenPort(port){					//SyntaxError: Unexpected token '.'
 				console.log("u must set (8000,)8008,8080,8081 or over 32767 as port number.\ndefault port is 50080");
 			}
 		default:
-			if (isNaN(port)){console.log("Not a Number");}
+			if (port == void 0){}else{console.log("Not a Number");}
 			return 50080;
 	}
 }
