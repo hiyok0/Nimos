@@ -1,0 +1,21 @@
+name: build
+on:
+  push:
+    branches:
+      - master      
+
+jobs:
+  mac:
+    name: mac-build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm i nexe -g
+      - run: nexe ./index.js -t=mac-x64-14.9.0 --build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nusuttoChan_${{ github.sha }}
+          path: ./nusuttoChan
