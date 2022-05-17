@@ -2,11 +2,9 @@
 //import post from "axios.post";
 import axios from "axios";
 import express from "express";
+import hbs from "hbs";
 import childProcess from 'child_process';
 import p from 'process';
-
-//
-//let playQueues = [];
 
 //express
 const listenPort = setListenPort(p.argv[2]);	//なんかまとめれない。　なんでぇ……？？？
@@ -30,12 +28,13 @@ function setListenPort(port){					//SyntaxError: Unexpected token '.'
 	}
 }
 
-//const listenPort = 50080
 let app = express();
 let server = app.listen(listenPort, function(){
 	console.log("Node.js is listening to PORT:" + server.address().port);
-});
+	//オープンソースソフトウェアライセンス
+	console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
 
+});
 
 //VOICEVOX
 let voicevox = {
@@ -89,7 +88,6 @@ switch (p.argv.length){
 		voicevox.settings.address = p.argv[3];
 }
 
-
 //playing
 let playing = {
 	"command": "mpv -",
@@ -109,11 +107,23 @@ let playing = {
 		}
 	}
 }
-//machi-uke 
+
+//待ち受けるとこ 
+//API的な？
 app.get("/talk", function(req) {
 	console.log(req.query.text);
 	voicevox.start(req.query.text);
 });
+//ドキュメントとか設定画面を表示
+let expressPath = {
+	"views"   : "./html/views",
+	"patrials": "./html/partials",
+	"static"  : "./html/static"
+}
+app.set('view engine', 'hbs');
+app.set('views', expressPath.views);
+hbs.registerPartials(expressPath.patrials);
+app.use(express.static(expressPath.static));
 
 playing.intervalID = setInterval(playing.main,500);
 voicevox.synthesis.intervalID = setInterval(voicevox.synthesis.process,1000);
