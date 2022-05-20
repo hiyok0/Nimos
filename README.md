@@ -32,3 +32,4 @@ node index.js [<listenPort> <voicevoxの起動してるipアドレス> <voicevox
 * setIntervalのdelayをとりあえず変数に
 * VOICEVOX以外への対応（できるかどうかはわからない）
 *  VOICEVOXのデフォルトの話者を1にする
+* VOICEVOXのクエリ編集（できれば）

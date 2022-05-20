@@ -30,7 +30,7 @@ function setListenPort(port){					//SyntaxError: Unexpected token '.'
 
 let app = express();
 let server = app.listen(listenPort, function(){
-	console.log("Node.js is listening to PORT:" + server.address().port);
+	console.log("nusuttoChan is listening to PORT:" + server.address().port);
 	//オープンソースソフトウェアライセンス
 	console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
 
@@ -39,16 +39,24 @@ let server = app.listen(listenPort, function(){
 //VOICEVOX
 let voicevox = {
 	"settings": {				//voicevoxの設定は全部ここに
+		//全体
 		"address": "localhost",
 		"port"   : "50021",
 		"speaker": "14",
-		"lock"   : 1
+		//クエリの編集
+		//speed,pitch,抑揚
+		//合成プロセスに関する部分
+		"lock"   : 1,
+		"intervalTime": 1000
 	},
 	"start": function(text){
 		axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/audio_query?text="+encodeURIComponent(text)+"&speaker="+voicevox.settings.speaker)
 		.then(res => {
 			console.log(res.data);
-			voicevox.synthesis.queues.push(res.data);
+			voicevox.synthesis.queues.push({
+				"speaker": voicevox.settings.speaker,
+				"query"  : res.data
+			});
 		})
 		.catch(err => {console.log("ERROR_audio_query \n"+err);});
 	},
@@ -59,10 +67,10 @@ let voicevox = {
 		"process": function() {
 			while(voicevox.synthesis.queues.length && voicevox.synthesis.lock < voicevox.settings.lock ){
 				voicevox.synthesis.lock++;
-				let query = voicevox.synthesis.queues.shift();
+				let queryObj = voicevox.synthesis.queues.shift();
 				console.log("Synthesis request is being sent!");
-				axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/synthesis?speaker="+voicevox.settings.speaker,
-					query,
+				axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/synthesis?speaker="+queryObj.speaker,
+					queryObj.query,
 					{"responseType": "arraybuffer"})
 				.then(res => {
 					console.log("synthesis:	["+res.request.res.statusCode+"]"+res.request.res.statusMessage);	//res.statusやres.statusTextでもいいっぽい？
@@ -72,7 +80,24 @@ let voicevox = {
 				.catch(err => {console.log("ERROR_synthesis \n:"+err);});
 			}
 		}
-	}
+	},
+	"getSpeakers": async function() { // NOT USED!!!!
+		console.log("request speaker list of voicevox……");
+		axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers")
+		.then(res => {
+			//console.log(res.data)
+			return res.data;
+			
+		})
+		.catch(() => {
+			console.log("requesting speaker list of voicevox is failed.");
+			return [{
+					"name"  : "ERROR",
+					"styles": [{"id": 1,"name":"話者リストを取得できませんでした。"}]
+				}];
+		});
+	},
+	"speakers":[]
 }
 //テスト用クソコード、考えるのがめんどくさかったからコピペしてる。
 //ちゃんと出来たら多分消す
@@ -90,14 +115,17 @@ switch (p.argv.length){
 
 //playing
 let playing = {
-	"command": "mpv -",
+	"settings" : {
+		"command": "mpv -",
+		"intervalTime": 500
+	},
 	"queues":[],
 	"lock": false,
 	"intervalID": null,
 	"main": async function(){
 		while(playing.queues.length && !playing.lock){
 			playing.lock = true;
-			let saisei = childProcess.exec(playing.command, function(err, result) {
+			let saisei = childProcess.exec(playing.settings.command, function(err, result) {
 				if (err) return console.log(err);
 				console.log(result);
 				playing.lock = false;
@@ -109,12 +137,12 @@ let playing = {
 }
 
 //待ち受けるとこ 
-//API的な？
+//音声リクエスト受付 **最重要**
 app.get("/talk", function(req) {
 	console.log(req.query.text);
 	voicevox.start(req.query.text);
 });
-//ドキュメントとか設定画面を表示
+//webUI
 let expressPath = {
 	"views"   : "./html/views",
 	"patrials": "./html/partials",
@@ -123,7 +151,43 @@ let expressPath = {
 app.set('view engine', 'hbs');
 app.set('views', expressPath.views);
 hbs.registerPartials(expressPath.patrials);
+app.get('/settings', (req, res) => {
+	axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers")
+	.then(res => {
+		console.log(res.data)
+		voicevox.speakers = res.data;
+	})
+	.catch(() => {
+		console.log("requesting speaker list of voicevox is failed.");
+		voicevox.speakers = [{
+				"name"  : "ERROR",
+				"styles": [{"id": 1,"name":"話者リストを取得できませんでした。"}]
+			}];
+	})
+	.finally(() => {
+			res.render('settings', {
+				playing : playing.settings,
+				voicevox: {
+					settings: voicevox.settings,
+					speakers: voicevox.speakers
+				}
+			});
+	});
+});
+app.get("/pages", function(req, res) {
+	console.log("pages?page="+req.query.page+" is called!");
+	res.render("pages/"+req.query.page);
+});
 app.use(express.static(expressPath.static));
+//設定とかのあれ
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded　ニセトランスルー機能つけようと思ったときにぶつからないかな……？
+app.post('/set', (req, res) => {
+  console.log('--- post() /set called ---')
+  console.log(req.body)
+  Object.assign(playing.settings,req.body.playing);//playing
+  Object.assign(voicevox.settings,req.body.voicevox);//VOICEVOX
+  res.redirect('/?finished=true')
+})
 
-playing.intervalID = setInterval(playing.main,500);
-voicevox.synthesis.intervalID = setInterval(voicevox.synthesis.process,1000);
+playing.intervalID = setInterval(playing.main,playing.settings.intervalTime);
+voicevox.synthesis.intervalID = setInterval(voicevox.synthesis.process,voicevox.settings.intervalTime);
