@@ -17,11 +17,12 @@
 
 あとはこのリポジトリをクローンするなりzipでDLするなりして、
 ```bash
+npm ci
 node index.js [<listenPort> <voicevoxの起動してるipアドレス> <voicevoxの待受けポート> <voicevoxの話者>]
 ```
 
 * 角括弧内は省略可能ですが、後ろのものを指定する場合は手前のものも入力しなければなりません。
-*  Web? UIっぽいものができてきたのでポートだけ変えたかったらここで変更して起動してから調整がおすすめです。
+*  Web? UIっぽいものができてきたので*nusuttoChan*自体の待受ポート以外は起動してから調整がおすすめです。
 * listenPort以外は殊更に暫定的なものなので多分そのうち変わります。初期値は以下です。
 	* listenPort: 50080
 	* voicevox address: localhost
