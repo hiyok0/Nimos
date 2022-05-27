@@ -28,8 +28,8 @@ function setListenPort(port){					//SyntaxError: Unexpected token '.'
 	}
 }
 
-let app = express();
-let server = app.listen(listenPort, function(){
+let expressApp = express();
+let server = expressApp.listen(listenPort, function(){
 	console.log("nusuttoChan is listening to PORT:" + server.address().port);
 	//オープンソースソフトウェアライセンス
 	console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
@@ -47,7 +47,17 @@ let voicevox = {
 		//speed,pitch,抑揚
 		//合成プロセスに関する部分
 		"lock"   : 1,
-		"intervalTime": 1000
+		"intervalTime": 1000,
+		"option":{
+			"speedScale": "1",
+			"pitchScale": "0",
+			"intonationScale": "1",
+			"volumeScale": "1",
+			"prePhonemeLength": "0.1",
+			"postPhonemeLength": "0.1",
+			"outputSamplingRate": "24000",
+			"outputStereo": false,
+		}
 	},
 	"start": function(text){
 		axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/audio_query?text="+encodeURIComponent(text)+"&speaker="+voicevox.settings.speaker)
@@ -138,7 +148,7 @@ let playing = {
 
 //待ち受けるとこ 
 //音声リクエスト受付 **最重要**
-app.get("/talk", function(req) {
+expressApp.get("/talk", function(req) {
 	console.log(req.query.text);
 	voicevox.start(req.query.text);
 });
@@ -148,10 +158,10 @@ let expressPath = {
 	"patrials": "./html/partials",
 	"static"  : "./html/static"
 }
-app.set('view engine', 'hbs');
-app.set('views', expressPath.views);
+expressApp.set('view engine', 'hbs');
+expressApp.set('views', expressPath.views);
 hbs.registerPartials(expressPath.patrials);
-app.get('/settings', (req, res) => {
+expressApp.get('/settings', (req, res) => {
 	axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers")
 	.then(res => {
 		console.log(res.data)
@@ -174,14 +184,62 @@ app.get('/settings', (req, res) => {
 			});
 	});
 });
-app.get("/pages", function(req, res) {
+expressApp.get("/pages",(req, res) => {
 	console.log("pages?page="+req.query.page+" is called!");
 	res.render("pages/"+req.query.page);
 });
-app.use(express.static(expressPath.static));
+expressApp.get("/", (req, res) => {
+	console.log("/ is called");
+	let resObj = {
+		"processVersions": process.versions,
+		"nusuttoChanVersion": process.env.npm_package_version,
+		"menu": [
+			{
+				"name": "About",
+				"link": "/pages?page=about",
+				"icon": "passport-line",
+				"color": "lightyellow"
+			},
+			{
+				"name": "Settings",
+				"link": "/settings",
+				"icon": "settings-5-line",
+				"color": "gainsboro"
+			},
+			{
+				"name": "GitHub",
+				"link": "https://github.com/hiyok0/nusuttoChan/",
+				"icon": "github-fill",
+				"color": "white"
+			},
+			{
+				"name": "Twitter",
+				"link": "https://twitter.com/Jewel_Flash",
+				"icon": "twitter-fill",
+				"color": "rgb(91,154,236)"
+			},
+			{
+				"name": "License表示",
+				"link": "/pages?page=opensorcelicenses",
+				"icon": "file-paper-2-line",
+				"color": "aliceblue"
+			},
+			{
+				"name": "Icon License",
+				"link": "/pages?page=remixiconlisence",
+				"icon": "remixicon-line",
+				"color": "dodgerblue"
+			}]
+	};
+	if(req.query.finished == true || req.query.finished == "true"){
+		resObj.finished = true
+	}else{ resObj.finished = false};
+	res.render("top", resObj);
+});
+expressApp.use(express.static(expressPath.static));
 //設定とかのあれ
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded　ニセトランスルー機能つけようと思ったときにぶつからないかな……？
-app.post('/set', (req, res) => {
+expressApp.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded　ニセトランスルー機能つけようと思ったときにぶつからないかな……？
+expressApp.post('/set', (req, res) => {
   console.log('--- post() /set called ---')
   console.log(req.body)
   Object.assign(playing.settings,req.body.playing);//playing

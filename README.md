@@ -17,8 +17,8 @@
 
 あとはこのリポジトリをクローンするなりzipでDLするなりして、
 ```bash
-npm ci
-node index.js [<listenPort> <voicevoxの起動してるipアドレス> <voicevoxの待受けポート> <voicevoxの話者>]
+npm ci #初回のみ
+npm run start [<listenPort> <voicevoxの起動してるipアドレス> <voicevoxの待受けポート> <voicevoxの話者>]
 ```
 
 * 角括弧内は省略可能ですが、後ろのものを指定する場合は手前のものも入力しなければなりません。

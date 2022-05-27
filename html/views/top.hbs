@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{{> defaultHead }}
+	<title>Top - nusuttoChan</title>
+</head>
+<body bgcolor="aquamarine">
+	<style>
+		header {
+			background-color: #f7f7f7;
+			display			: inline-block;
+			width			: 100%
+		}
+		.flex{
+			display:flex;
+			flex-wrap:wrap;
+		}
+		.flex A{
+			display: block;
+			margin: 0.5em;
+			text-align: center;
+			text-decoration: none;
+		}
+		.flex A [class^="ri-"]{
+			width : 4rem;
+			height: 4rem;
+			padding: 0.2rem;
+			margin: 1rem 1.5rem 0.2rem;
+			border-radius: 0.2em;
+		}
+	</style>
+	<header>
+		<i class="ri-tools-fill ri-lg"></i>nusuttoChan<i class="ri-at-line"></i>{{ nusuttoChanVersion }} Web<i class="ri-question-mark"></i> UI
+	</header>
+	<div class="flex">
+		{{#each menu}}
+			<A href="{{this.link}}">
+				<div class="ri-{{this.icon}} ri-3x" style="background-color:{{this.color}};"></div>
+				<div class="item-name">{{this.name}}</div>
+			</A>
+		{{/each}}
+	</div>
+	<div>working on node v{{ processVersions.node }}</div>
+</body>
+</html>
