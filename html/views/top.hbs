@@ -29,6 +29,13 @@
 			margin: 1rem 1.5rem 0.2rem;
 			border-radius: 0.2em;
 		}
+		.caution {
+			width: 300px;
+			margin: 0.5rem auto 1rem;
+			padding 0.5rem;
+			border-radius: 0.2em;
+			background-color: goldenrod;
+		}
 	</style>
 	<header>
 		<i class="ri-tools-fill ri-lg"></i>nusuttoChan<i class="ri-at-line"></i>{{ nusuttoChanVersion }} Web<i class="ri-question-mark"></i> UI
@@ -41,6 +48,7 @@
 			</A>
 		{{/each}}
 	</div>
+	<div class="caution">　作りが雑なため、一部の画面ではウィンドウサイズを調整する必要があったり、一度ウィンドウサイズを閉じないと戻ってこれなくなったりします。</div>
 	<div>working on node v{{ processVersions.node }}</div>
 </body>
 </html>
