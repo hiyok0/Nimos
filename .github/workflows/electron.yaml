@@ -1,0 +1,26 @@
+name: build
+on:
+  push:
+    branches:
+      - master      
+
+jobs:
+  mac:
+    name: mac-build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: |
+          git clone https://github.com/hiyok0/nusuttoChan.git
+          cd nusuttoChan
+          npm ci
+          #一応実行↓
+          npx electron-forge import
+          npm run make
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nusuttoChan_${{ github.sha }}
+          path: nusuttoChan/nusuttoChan
