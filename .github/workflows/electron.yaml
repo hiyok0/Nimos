@@ -23,4 +23,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: nusuttoChan_${{ github.sha }}
-          path: nusuttoChan/nusuttoChan
+          path: nusuttoChan/out/make/zip/darwin/x64/nusuttochan-darwin-x64-*.zip
