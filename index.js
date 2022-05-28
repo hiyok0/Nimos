@@ -1,10 +1,49 @@
-//import
+//require
+const axios = require("axios");
+const express = require("express");
+const hbs = require("hbs");
+const { app, BrowserWindow } = require("electron");
+const childProcess = require("child_process");
+const p = require("process");
+
 //import post from "axios.post";
+/*
 import axios from "axios";
 import express from "express";
 import hbs from "hbs";
+import app from "electron";
+import BrowserWindow from "electron";
 import childProcess from 'child_process';
 import p from 'process';
+*/
+
+let ready = {
+	"status": false,
+	"port": null,
+	"go"	: function(){
+		if (ready.status){
+			clearInterval(ready.IntervalID);
+			//splashWindow.destroy();
+			generateMainWindow();
+		}
+	},
+	"IntervalID": null
+}
+
+//electron（splash＋最初のelectron）
+/*
+const createSplash = () => {
+	const splashWindow = new BrowserWindow({
+		frame: false,	// フレームレスにする
+		width: 400,
+		height: 300,
+	})
+	splashWindow.loadURL('https://images-fe.ssl-images-amazon.com/images/I/91VGBiIS6hL.jpg')
+}
+app.whenReady().then(() => {
+	createSplash()
+})*/
+app.on('window-all-closed', () => {}) //こうするとなんかうまくいく
 
 //express
 const listenPort = setListenPort(p.argv[2]);	//なんかまとめれない。　なんでぇ……？？？
@@ -28,12 +67,42 @@ function setListenPort(port){					//SyntaxError: Unexpected token '.'
 	}
 }
 
+//electron（メイン？）
+function generateMainWindow() {
+	const createWindow = () => {
+	  // ブラウザウインドウを作成します。
+	  const mainWindow = new BrowserWindow({
+		width: 800,
+		height: 600,
+	  })
+
+	  // そしてアプリの index.html を読み込みます。
+	  mainWindow.loadURL("http://localhost:"+ready.port)
+
+	  // デベロッパー ツールを開きます。
+	  // mainWindow.webContents.openDevTools()
+	}
+	app.whenReady().then(() => {
+		createWindow()
+
+		app.on('activate', () => {
+			// macOS では、Dock アイコンのクリック時に他に開いているウインドウがない
+			// 場合、アプリのウインドウを再作成するのが一般的です。
+			if (BrowserWindow.getAllWindows().length === 0) createWindow()
+		})
+	})
+}
+
 let expressApp = express();
 let server = expressApp.listen(listenPort, function(){
 	console.log("nusuttoChan is listening to PORT:" + server.address().port);
 	//オープンソースソフトウェアライセンス
 	console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
-
+	//splashからメイン画面に
+	Object.assign(ready, {
+		"status": true,
+		"port": server.address().port
+	});
 });
 
 //VOICEVOX
@@ -247,5 +316,6 @@ expressApp.post('/set', (req, res) => {
   res.redirect('/?finished=true')
 })
 
+ready.IntervalID = setInterval(ready.go,100);
 playing.intervalID = setInterval(playing.main,playing.settings.intervalTime);
 voicevox.synthesis.intervalID = setInterval(voicevox.synthesis.process,voicevox.settings.intervalTime);

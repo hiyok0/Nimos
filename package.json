@@ -2,15 +2,18 @@
   "name": "nusuttochan",
   "version": "0.0.1",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
-	  "start": "node index.js"
-	},
+    "start": "node index.js",
+    "electron": "electron ."
+  },
   "author": "hiyoko",
   "dependencies": {
     "axios": "^0.27.2",
     "express": "^4.18.1",
     "hbs": "^4.2.0"
+  },
+  "devDependencies": {
+    "electron": "^19.0.1"
   }
 }
