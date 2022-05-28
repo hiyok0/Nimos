@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{{> defaultHead }}
+	<title>設定 - nusuttoChan</title>
+</head>
+<body>
+	<header>{{> header }}</header>
+	<h1>設定</h1>
+	<form method="POST" action="/set">
+		<div id="mainSettings">
+			<h2><i class="ri-home-gear-fill ri-xl"></i>本体設定</h2>
+			<table><tbody>
+				<tr>
+					<td>再生コマンド</td>
+					<td><input type="text" name="playing[command]" value="{{playing.command}}" /></td>
+				</tr>
+				<tr>
+					<td>Interval Time</td>
+					<td>
+						<input type="number" name="playing[intervalTime]" value="{{playing.intervalTime}}" />
+						<i class="ri-skull-2-fill"></i>
+					</td>
+				</tr>
+			</tbody></table>
+		</div>
+		<div id="voicevoxSettings">
+			<h2>
+				<table><tbody><tr><!--表じゃないところにtableを使ってる。（自首）-->
+					<td align="center" style="color:white; background-color:rgb(175,210,176); width: 2rem; height:2rem;">Ｖ</td>
+					<td width="0.5rem"></td>
+					<td>VOICEVOX ENGINE <A class="ri-github-fill" href="https://github.com/VOICEVOX/voicevox_engine"></A></td>
+				</tr></tbody></table>
+			</h2>
+			<table><tbody>
+				<tr>
+					<td>IPアドレス</td>
+					<td><input type="text" name="voicevox[address]" value="{{voicevox.settings.address}}" /></td>
+				</tr>
+				<tr>
+					<td>ポート番号</td>
+					<td><input type="text" name="voicevox[port]" value="{{voicevox.settings.port}}" /></td>
+				</tr>
+				<tr>
+					<td>話者</td>
+					<td>
+						<select name="voicevox[speaker]">
+							<optgroup>
+							<!--そのうちちゃんと下でselectedをつけるようにするかもしれないけどめんどくさいからとりあえず。valueは一応設定
+								……したせいかたまに謎挙動するけど使用に支障はないので放置-->
+							<option value="{{voicevox.settings.speaker}}" selected hidden disabled>変更しない</option>
+							</optgroup>
+							{{#each voicevox.speakers}}
+								<optgroup label="{{this.name}}">
+									{{#each this.styles}}
+										<option value="{{this.id}}">{{../name}}（{{this.name}}）</option>
+									{{/each}}
+								</optgroup>
+							{{/each }}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>話速</td>
+					<td><input type="number" placeholder="未実装" /></td>
+				</tr>
+				<tr>
+					<td>ピッチ</td>
+					<td><input type="number" placeholder="未実装" /></td>
+				</tr>
+				<tr>
+					<td>抑揚</td>
+					<td><input type="number" placeholder="未実装" /></td>
+				</tr>
+				<tr>
+					<td>同時合成数</td>
+					<td>
+						<input type="number" name="voicevox[lock]" value="{{voicevox.settings.lock}}" />
+						<i class="ri-skull-2-fill"></i>
+					</td>
+				</tr>
+				<tr>
+					<td>Interval Time</td>
+					<td>
+						<input type="number" name="voicevox[intervalTime]" value="{{voicevox.settings.intervalTime}}" />
+						<i class="ri-skull-2-fill"></i>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><input type="submit" value="保存" style="width:100%; padding:auto;" /></td>
+				</tr>
+			</tbody></table>
+		</div>
+	</form>
+</body>
+</html>

@@ -17,18 +17,20 @@
 
 あとはこのリポジトリをクローンするなりzipでDLするなりして、
 ```bash
-node index.js [<listenPort> <voicevoxの起動してるipアドレス> <voicevoxの待受けポート> <voicevoxの話者>]
+npm ci #初回のみ
+npm run start [<listenPort> <voicevoxの起動してるipアドレス> <voicevoxの待受けポート> <voicevoxの話者>]
 ```
 
 * 角括弧内は省略可能ですが、後ろのものを指定する場合は手前のものも入力しなければなりません。
+*  Web? UIっぽいものができてきたので*nusuttoChan*自体の待受ポート以外は起動してから調整がおすすめです。
 * listenPort以外は殊更に暫定的なものなので多分そのうち変わります。初期値は以下です。
 	* listenPort: 50080
 	* voicevox address: localhost
 	* voicevox port: 50021
 	* voicevox speaker: 14
-		* デフォルトの話者が14になっているのは個人的に冥鳴ひまりさんの声が好きだからです。14番の話者が誰になっているかは各自で確認してください。そのうち１に戻します。
+		* デフォルトの話者が14になっているのは個人的に冥鳴ひまりさんの声が好きだからです。14番の話者が誰になっているかは各自で確認してください。そのうち１に戻すかもしれない。
 
 ## やることリスト
-* setIntervalのdelayをとりあえず変数に
 * VOICEVOX以外への対応（できるかどうかはわからない）
-*  VOICEVOXのデフォルトの話者を1にする
+*  VOICEVOXのデフォルトの話者を1(or 3)にする
+* VOICEVOXのクエリ編集（できれば）
