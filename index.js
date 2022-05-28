@@ -196,7 +196,7 @@ switch (p.argv.length){
 //playing
 let playing = {
 	"settings" : {
-		"command": "mpv -",
+		"command": "/usr/local/bin/mpv -",
 		"intervalTime": 500
 	},
 	"queues":[],
