@@ -5,6 +5,7 @@ const hbs = require("hbs");
 const { app, BrowserWindow } = require("electron");
 const childProcess = require("child_process");
 const p = require("process");
+const path = require("path")
 
 //import post from "axios.post";
 /*
@@ -72,8 +73,8 @@ function generateMainWindow() {
 	const createWindow = () => {
 	  // ブラウザウインドウを作成します。
 	  const mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
+		width: 475,
+		height: 800,
 	  })
 
 	  // そしてアプリの index.html を読み込みます。
@@ -223,9 +224,9 @@ expressApp.get("/talk", function(req) {
 });
 //webUI
 let expressPath = {
-	"views"   : "./html/views",
-	"patrials": "./html/partials",
-	"static"  : "./html/static"
+	"views"   : path.join(__dirname, "./html/views"),
+	"patrials": path.join(__dirname, "./html/partials"),
+	"static"  : path.join(__dirname, "./html/static")
 }
 expressApp.set('view engine', 'hbs');
 expressApp.set('views', expressPath.views);

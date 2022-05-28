@@ -4,16 +4,52 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "electron": "electron ."
+    "oldstart": "node index.js",
+    "start": "electron-forge start",
+    "electron": "electron .",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "author": "hiyoko",
   "dependencies": {
     "axios": "^0.27.2",
+    "electron-squirrel-startup": "^1.0.0",
     "express": "^4.18.1",
     "hbs": "^4.2.0"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.63",
+    "@electron-forge/maker-deb": "^6.0.0-beta.63",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.63",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+    "@electron-forge/maker-zip": "^6.0.0-beta.63",
     "electron": "^19.0.1"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "nusuttochan"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }
