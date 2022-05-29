@@ -216,12 +216,14 @@ let playing = {
 	}
 }
 
-//待ち受けるとこ 
-//音声リクエスト受付 **最重要**
-expressApp.get("/talk", function(req) {
-	console.log(req.query.text);
-	voicevox.start(req.query.text);
-});
+//待ち受けるとこ
+//連携用 
+	//音声リクエスト受付 **最重要**
+	expressApp.get("/talk", function(req, res) {
+		console.log(req.query.text);
+		voicevox.start(req.query.text);
+		res.send("nusuttoChan");//一応設定可能にしてもいいかもしれない
+	});
 //webUI
 let expressPath = {
 	"views"   : path.join(__dirname, "./html/views"),
