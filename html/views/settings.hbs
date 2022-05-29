@@ -2,6 +2,9 @@
 <html>
 <head>
 	{{> defaultHead }}
+	<style>
+		.hontai td:nth-of-type(1){text-align:right;}
+	</style>
 	<title>設定 - nusuttoChan</title>
 </head>
 <body>
@@ -10,7 +13,7 @@
 	<form method="POST" action="/set">
 		<div id="mainSettings">
 			<h2><i class="ri-home-gear-fill ri-xl"></i>本体設定</h2>
-			<table><tbody>
+			<table class="hontai"><tbody>
 				<tr>
 					<td>再生コマンド</td>
 					<td><input type="text" name="playing[command]" value="{{playing.command}}" /></td>
@@ -32,9 +35,9 @@
 					<td>VOICEVOX ENGINE <A class="ri-github-fill" href="https://github.com/VOICEVOX/voicevox_engine"></A></td>
 				</tr></tbody></table>
 			</h2>
-			<table><tbody>
+			<table class="hontai"><tbody>
 				<tr>
-					<td>IPアドレス</td>
+					<td>アドレス</td>
 					<td><input type="text" name="voicevox[address]" value="{{voicevox.settings.address}}" /></td>
 				</tr>
 				<tr>
@@ -71,6 +74,10 @@
 				<tr>
 					<td>抑揚</td>
 					<td><input type="number" placeholder="未実装" /></td>
+				</tr>
+				<tr>
+					<td>語尾追加</td>
+					<td><input type="text" placeholder="未実装（かわいい補正機能）" style="height:100%;" /></td>
 				</tr>
 				<tr>
 					<td>同時合成数</td>
