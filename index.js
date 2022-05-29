@@ -224,6 +224,34 @@ let playing = {
 		voicevox.start(req.query.text);
 		res.send("nusuttoChan");//一応設定可能にしてもいいかもしれない
 	});
+	//話者リストを返す（仮）こういうのじゃなくて対応表はユーザに作らせてもいいかもしれない。
+	expressApp.get("/speakers", function(req, res) {
+		console.log('--- get() /speakers called ---');
+		axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers")
+		.then( speakersList => {
+			console.log(speakersList.data);
+			let resData = [];
+			while(speakersList.data.length){
+				let washa = speakersList.data.shift();
+				while(washa.styles.length){
+					let style = washa.styles.shift();
+					resData.push({
+						"id": parseFloat(style.id) + 10000,		//帰ってきたときにこっちがもっと処理しやすい形はなんだろう。
+						"name": "VOICEVOX："+washa.name+"（"+style.name+"）"
+					});
+				}
+			}
+			res.type("json");
+			res.send(JSON.stringify(resData));
+		})
+		.catch(speakersList => {
+			res.type("json");
+			res.send(JSON.stringify({
+				"id": parseFloat(voicevox.settings.speaker) + 10000,
+				"name": "話者リストの取得に失敗しました。（［"+speakersList.status+"］"+speakersList.statusText+"）"
+			}));
+		});
+	});
 //webUI
 let expressPath = {
 	"views"   : path.join(__dirname, "./html/views"),
@@ -312,8 +340,8 @@ expressApp.use(express.static(expressPath.static));
 //設定とかのあれ
 expressApp.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded　ニセトランスルー機能つけようと思ったときにぶつからないかな……？
 expressApp.post('/set', (req, res) => {
-  console.log('--- post() /set called ---')
-  console.log(req.body)
+  console.log('--- post() /set called ---');
+  console.log(req.body);
   Object.assign(playing.settings,req.body.playing);//playing
   Object.assign(voicevox.settings,req.body.voicevox);//VOICEVOX
   res.redirect('/?finished=true')
