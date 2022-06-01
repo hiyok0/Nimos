@@ -28,12 +28,14 @@
 			margin: 1rem 1.5rem 0.2rem;
 			border-radius: 0.2em;
 		}
-		.caution {
-			width: 75%;
+		#showPortNumber {
+			display: none;
+			width: 15rem;
 			margin: 0.5rem auto 1rem;
-			padding 0.5rem;
+			padding 1rem;
 			border-radius: 0.2em;
 			background-color: goldenrod;
+			text-align: center;
 		}
 	</style>
 	<header>
@@ -47,7 +49,8 @@
 			</A>
 		{{/each}}
 	</div>
-	<div class="caution">　作りが雑なため、一部の画面ではウィンドウサイズを調整する必要があったり、一度ウィンドウサイズを閉じないと戻ってこれなくなったり、操作に支障のない程度に初めから壊れていたりします。</div>
+	<div id="showPortNumber">Port Number: {{port}}</div>
 	<div>working on node v{{ processVersions.node }}</div>
 </body>
+<script>if (navigator.userAgent.indexOf('nusuttochan') > 0) {document.getElementById("showPortNumber").style.setProperty("display", "block");}</script>
 </html>

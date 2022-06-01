@@ -95,16 +95,11 @@ function setListenPort(port){					//SyntaxError: Unexpected token '.'
 function generateMainWindow() {
 	const createWindow = () => {
 	  // ブラウザウインドウを作成します。
-	  const mainWindow = new BrowserWindow({
-		width: 475,
-		height: 800,
-	  })
-
-	  // そしてアプリの index.html を読み込みます。
-	  mainWindow.loadURL("http://localhost:"+ready.port)
-
-	  // デベロッパー ツールを開きます。
-	  // mainWindow.webContents.openDevTools()
+		const mainWindow = new BrowserWindow({
+			width: 475,
+			height: 800,
+		})
+	mainWindow.loadURL("http://localhost:"+ready.port)
 	}
 	app.whenReady().then(() => {
 		createWindow()
@@ -302,6 +297,7 @@ expressApp.get("/pages",(req, res) => {
 expressApp.get("/", (req, res) => {
 	console.log("/ is called");
 	let resObj = {
+		"port": ready.port,
 		"processVersions": process.versions,
 		"nusuttoChanVersion": process.env.npm_package_version,
 		"menu": [

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <h1 id="package-name">OSS Licenses</h1>
+  <div class="licenses">
+    {{#renderLicenses}}
+    <h3>
+      {{#pkgs}}
+      {{#homepage}}<a href="{{{homepage}}}">{{/homepage}}{{name}}{{#homepage}}</a>{{/homepage}}{{#comma}}, {{/comma}}
+      {{/pkgs}}
+    </h3>
+    <pre>
+      {{text}}
+    </pre>
+    {{/renderLicenses}}
+  </div>
+  <style>
+    .licenses pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      display: inline-block;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .licenses pre {
+        width: 100%;
+        margin: 0px;
+      }
+    }
+
+    @media only screen and (min-width: 768px) {
+      body {
+        margin-left: 10vw;
+      }
+    }
+
+    .licenses h3,
+    #package-name {
+      font-family: sans-serif;
+    }
+  </style>
+</body>
