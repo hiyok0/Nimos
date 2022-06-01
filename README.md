@@ -8,7 +8,7 @@
 　想定環境は特に無いけどとりあえずmacとか(?)
 
 ### Screenshots
-<blockquote class="twitter-tweet"><p lang="und" dir="ltr">WIP <a href="https://t.co/W0WjkTEAfG">pic.twitter.com/W0WjkTEAfG</a></p>&mdash; せかいい＠しばらく低活動 (@Jewel_Flash) <a href="https://twitter.com/Jewel_Flash/status/1532119003061428224?ref_src=twsrc%5Etfw">June 1, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+![nusuttoChan screenshots at f3c728128b72a74385560bae245c70c7a75cdfc8](https://i.imgur.com/MXvHYc0.jpg)
 開発し始めたばかりのため見た目が大幅に変わる可能性もあります。
 
 ## 使い方
