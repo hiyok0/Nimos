@@ -1,8 +1,9 @@
 //require
 const axios = require("axios");
 const express = require("express");
+const portfinder = require("portfinder");
 const hbs = require("hbs");
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, dialog } = require("electron");
 const childProcess = require("child_process");
 const p = require("process");
 const path = require("path")
@@ -47,7 +48,29 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {}) //こうするとなんかうまくいく
 
 //express
-const listenPort = setListenPort(p.argv[2]);	//なんかまとめれない。　なんでぇ……？？？
+let expressApp = express();
+let server ;
+let startPort = 50080;		//設定ファイルを作った時は項目の有無とか考えてもいいかもしれない
+portfinder.getPortPromise({
+	port: startPort
+})
+.then((availablePort) => {
+	server = expressApp.listen(availablePort, function(){
+		console.log("nusuttoChan is listening to PORT:" + server.address().port);
+		//オープンソースソフトウェアライセンス
+		console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
+		//splashからメイン画面に
+		Object.assign(ready, {
+			"status": true,
+			"port": server.address().port
+		});
+	});
+})
+.catch((err) => {
+	dialog.showErrorBox("Failed to find available port.", err);
+	//app.quit();
+});
+
 function setListenPort(port){					//SyntaxError: Unexpected token '.'
 	switch (isNaN(port)) {
 		case false:
@@ -93,18 +116,6 @@ function generateMainWindow() {
 		})
 	})
 }
-
-let expressApp = express();
-let server = expressApp.listen(listenPort, function(){
-	console.log("nusuttoChan is listening to PORT:" + server.address().port);
-	//オープンソースソフトウェアライセンス
-	console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
-	//splashからメイン画面に
-	Object.assign(ready, {
-		"status": true,
-		"port": server.address().port
-	});
-});
 
 //VOICEVOX
 let voicevox = {
