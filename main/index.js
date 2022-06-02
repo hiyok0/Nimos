@@ -3,7 +3,7 @@ const axios = require("axios");
 const express = require("express");
 const portfinder = require("portfinder");
 const hbs = require("hbs");
-const { app, BrowserWindow, dialog } = require("electron");
+const { app, Menu, BrowserWindow, dialog } = require("electron");
 const childProcess = require("child_process");
 const p = require("process");
 const path = require("path")
@@ -99,6 +99,44 @@ function generateMainWindow() {
 			width: 475,
 			height: 800,
 		})
+	
+	// メニューを適用する
+	app.setAboutPanelOptions({
+		applicationName: app.name,
+		applicationVersion: process.env.npm_package_version,
+		copyright: process.env.npm_package_author,
+		version: process.env.npm_package_version+" on "+process.platform.replace(/"darwin"/g, "macOS"),
+		credits: process.env.npm_package_author,
+		authors: [process.env.npm_package_author],
+		website: "https://github.com/hiyok0/nusuttoChan",
+		iconPath: path.join(__dirname, "./html/static/assets/icon.png")
+	})
+	Menu.setApplicationMenu(Menu.buildFromTemplate([
+		{
+			label: app.name,
+			submenu:[
+				{role: "about", label: app.name+"について" },
+				{type:'separator'},
+				{role:'hide',       label:`${app.name}を隠す`},
+				{role:'hideothers', label:'ほかを隠す'},
+				{role:'unhide',     label:'すべて表示'},
+				{type:'separator'},
+				{role:'quit',       label:`${app.name}を終了`}
+			]
+		},
+		{
+			label: "編集",
+			submenu: [
+				{ role:'undo',  label:'元に戻す' },
+				{ role:'redo',  label:'やり直す' },
+				{ type:'separator' },
+				{ role:'cut',   label:'切り取り' },
+				{ role:'copy',  label:'コピー' },
+				{ role:'paste', label:'貼り付け' },
+			]
+		}
+	]));
+	
 	mainWindow.loadURL("http://localhost:"+ready.port)
 	}
 	app.whenReady().then(() => {
