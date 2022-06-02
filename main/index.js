@@ -292,7 +292,7 @@ const playing = {
 				while(washa.styles.length){
 					let style = washa.styles.shift();
 					resData.push({
-						"id": parseFloat(style.id) + 10000,		//帰ってきたときにこっちがもっと処理しやすい形はなんだろう。
+						"id": parseFloat(style.id) + 0,		//帰ってきたときにこっちがもっと処理しやすい形はなんだろう。
 						"name": "VOICEVOX："+washa.name+"（"+style.name+"）"
 					});
 				}
@@ -303,7 +303,7 @@ const playing = {
 		.catch(speakersList => {
 			res.type("json");
 			res.send(JSON.stringify({
-				"id": parseFloat(voicevox.settings.speaker) + 10000,
+				"id": parseFloat(voicevox.settings.speaker) + 0,
 				"name": "話者リストの取得に失敗しました。（［"+speakersList.status+"］"+speakersList.statusText+"）"
 			}));
 		});
