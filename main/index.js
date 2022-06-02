@@ -19,7 +19,7 @@ import childProcess from 'child_process';
 import p from 'process';
 */
 
-let ready = {
+const ready = {
 	"status": false,
 	"port": null,
 	"go"	: function(){
@@ -48,7 +48,7 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {}) //こうするとなんかうまくいく
 
 //express
-let expressApp = express();
+const expressApp = express();
 let server ;
 let startPort = 50080;		//設定ファイルを作った時は項目の有無とか考えてもいいかもしれない
 portfinder.getPortPromise({
@@ -151,7 +151,7 @@ function generateMainWindow() {
 }
 
 //VOICEVOX
-let voicevox = {
+const voicevox = {
 	"settings": {				//voicevoxの設定は全部ここに
 		//全体
 		"address": "localhost",
@@ -191,7 +191,7 @@ let voicevox = {
 		"process": function() {
 			while(voicevox.synthesis.queues.length && voicevox.synthesis.lock < voicevox.settings.lock ){
 				voicevox.synthesis.lock++;
-				let queryObj = voicevox.synthesis.queues.shift();
+				const queryObj = voicevox.synthesis.queues.shift();
 				console.log("Synthesis request is being sent!");
 				axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/synthesis?speaker="+queryObj.speaker,
 					queryObj.query,
@@ -238,7 +238,7 @@ switch (p.argv.length){
 }
 
 //playing
-let playing = {
+const playing = {
 	"settings" : {
 		"command": "/usr/local/bin/mpv -",
 		"intervalTime": 500
@@ -249,7 +249,7 @@ let playing = {
 	"main": async function(){
 		while(playing.queues.length && !playing.lock){
 			playing.lock = true;
-			let saisei = childProcess.exec(playing.settings.command, function(err, result) {
+			const saisei = childProcess.exec(playing.settings.command, function(err, result) {
 				if (err) return console.log(err);
 				console.log(result);
 				playing.lock = false;
@@ -274,9 +274,9 @@ let playing = {
 		axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers")
 		.then( speakersList => {
 			console.log(speakersList.data);
-			let resData = [];
+			const resData = [];
 			while(speakersList.data.length){
-				let washa = speakersList.data.shift();
+				const washa = speakersList.data.shift();
 				while(washa.styles.length){
 					let style = washa.styles.shift();
 					resData.push({
@@ -297,7 +297,7 @@ let playing = {
 		});
 	});
 //webUI
-let expressPath = {
+const expressPath = {
 	"views"   : path.join(__dirname, "./html/views"),
 	"patrials": path.join(__dirname, "./html/partials"),
 	"static"  : path.join(__dirname, "./html/static")
@@ -334,7 +334,7 @@ expressApp.get("/pages",(req, res) => {
 });
 expressApp.get("/", (req, res) => {
 	console.log("/ is called");
-	let resObj = {
+	const resObj = {
 		"port": ready.port,
 		"processVersions": process.versions,
 		"nusuttoChanVersion": process.env.npm_package_version,
