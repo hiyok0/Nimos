@@ -5,7 +5,6 @@ const portfinder = require("portfinder");
 const hbs = require("hbs");
 const { app, Menu, BrowserWindow, dialog } = require("electron");
 const childProcess = require("child_process");
-const p = require("process");
 const path = require("path")
 
 //import post from "axios.post";
@@ -222,19 +221,6 @@ const voicevox = {
 		});
 	},
 	"speakers":[]
-}
-//テスト用クソコード、考えるのがめんどくさかったからコピペしてる。
-//ちゃんと出来たら多分消す
-switch (p.argv.length){
-	case 6:
-		voicevox.settings.speaker = p.argv[5];
-		voicevox.settings.port = p.argv[4];
-		voicevox.settings.address = p.argv[3];
-	case 5:
-		voicevox.settings.port = p.argv[4];
-		voicevox.settings.address = p.argv[3];
-	case 4:
-		voicevox.settings.address = p.argv[3];
 }
 
 //playing
