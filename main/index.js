@@ -204,6 +204,10 @@ const voicevox = {
 			}
 		}
 	},
+	"clearQueues": function() {
+		voicevox.synthesis.queues.length = 0;
+		console.log("voicevox.synthesis.queues is cleared.");
+	},
 	"getSpeakers": async function() { // NOT USED!!!!
 		console.log("request speaker list of voicevox……");
 		axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers")
@@ -243,16 +247,31 @@ const playing = {
 			await saisei.stdin.write(playing.queues.shift());
 			await saisei.stdin.end();
 		}
+	},
+	"clearQueues": function() {
+		playing.queues.length = 0;
+		console.log("playing.queues is cleared.");
 	}
 }
 
 //待ち受けるとこ
-//連携用 
+//連携用or連携を機に実装
 	//音声リクエスト受付 **最重要**
 	expressApp.get("/talk", function(req, res) {
 		console.log(req.query.text);
 		voicevox.start(req.query.text);
 		res.send("nusuttoChan");//一応設定可能にしてもいいかもしれない
+	});
+	//キューのクリア **重要**
+	expressApp.get("/clear", function(req, res) {
+		console.log("--- get() /clear called ---");
+		if(req.header('User-Agent').indexOf("live-comment-viewer") + 1){
+			res.send("nusuttoChan");//一応設定可能にしてもいいかもしれない
+		}else{
+			res.redirect('/?finished=true');
+		}
+		voicevox.clearQueues();
+		playing.clearQueues();
 	});
 	//話者リストを返す（仮）こういうのじゃなくて対応表はユーザに作らせてもいいかもしれない。
 	expressApp.get("/speakers", function(req, res) {
@@ -321,6 +340,7 @@ expressApp.get("/pages",(req, res) => {
 expressApp.get("/", (req, res) => {
 	console.log("/ is called");
 	const resObj = {
+		"appName": app.name,
 		"port": ready.port,
 		"processVersions": process.versions,
 		"nusuttoChanVersion": process.env.npm_package_version,
@@ -336,6 +356,12 @@ expressApp.get("/", (req, res) => {
 				"link": "/settings",
 				"icon": "settings-5-line",
 				"color": "gainsboro"
+			},
+			{
+				"name": "Clear",
+				"link": "/clear",
+				"icon": "delete-bin-2-line",
+				"color": "#cc526a"
 			},
 			{
 				"name": "GitHub",

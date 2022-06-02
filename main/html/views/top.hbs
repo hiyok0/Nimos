@@ -52,5 +52,5 @@
 	<div id="showPortNumber">Port Number: {{port}}</div>
 	<div>working on node v{{ processVersions.node }}</div>
 </body>
-<script>if (navigator.userAgent.indexOf('nusuttochan') > 0) {document.getElementById("showPortNumber").style.setProperty("display", "block");}</script>
+<script>if (navigator.userAgent.indexOf( "{{ appName }}" ) + 1 ) {document.getElementById("showPortNumber").style.setProperty("display", "block");}</script>
 </html>
