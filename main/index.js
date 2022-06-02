@@ -103,11 +103,11 @@ function generateMainWindow() {
 	// メニューを適用する
 	app.setAboutPanelOptions({
 		applicationName: app.name,
-		applicationVersion: process.env.npm_package_version,
-		copyright: process.env.npm_package_author,
-		version: process.env.npm_package_version+" on "+process.platform.replace(/"darwin"/g, "macOS"),
-		credits: process.env.npm_package_author,
-		authors: [process.env.npm_package_author],
+		applicationVersion: app.getVersion(),
+		copyright: "(c) hiyoko Project",
+		version: app.getVersion()+" on "+process.platform.replace("darwin", "macOS"),
+		credits: "hiyoko Project",
+		authors: ["hiyoko","sekaii"],
 		website: "https://github.com/hiyok0/nusuttoChan",
 		iconPath: path.join(__dirname, "./html/static/assets/icon.png")
 	})
