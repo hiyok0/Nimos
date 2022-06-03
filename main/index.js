@@ -165,20 +165,24 @@ const voicevox = {
 			"outputStereo": "false"
 		}
 	},
-	"start": function(text,speaker){
+	"start": function(text,options){
 		const queryQueue = {
 			"speaker": voicevox.settings.speaker,
 			"queue"  : null
 		};
-		if(speaker){
-			console.log("speaker: "+speaker);
-			queryQueue.speaker = speaker;
+		if(options.speaker){
+			console.log("speaker: "+options.speaker);
+			queryQueue.speaker = options.speaker;
+		}
+		for(effect in options.effects){
+			if(options.effects[effect] == void 0){delete options.effects[effect]}
 		}
 		axios.post("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/audio_query?text="+encodeURIComponent(text)+"&speaker="+queryQueue.speaker)
 		.then(res => {
 			console.log(res.data);
-			queryQueue.query = res.data;
+			queryQueue.query = Object.assign(res.data,options.effects);
 			voicevox.synthesis.queues.push(queryQueue);
+			console.log(queryQueue.query);
 		})
 		.catch(err => {console.log("ERROR_audio_query \n"+err);});
 	},
@@ -258,8 +262,14 @@ const playing = {
 	//音声リクエスト受付 **最重要**
 	expressApp.get("/talk", function(req, res) {
 		console.log(req.query.text);
-		if(req.query.voice){ voicevox.start(req.query.text, req.query.voice);}
-		else{voicevox.start(req.query.text);}
+		voicevox.start(req.query.text, {
+			"speaker": req.query.voice,
+			"effects": {
+				"speedScale": req.query.speed,
+				"pitchScale": req.query.tone,
+				"volumeScale": req.query.volume
+			}
+		});
 		res.send("nusuttoChan");//一応設定可能にしてもいいかもしれない
 	});
 	//キューのクリア **重要**
