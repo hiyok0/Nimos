@@ -95,7 +95,7 @@ function generateMainWindow() {
 	const createWindow = () => {
 	  // ブラウザウインドウを作成します。
 		const mainWindow = new BrowserWindow({
-			width: 475,
+			width: 500,
 			height: 800,
 		})
 	
@@ -161,15 +161,8 @@ const voicevox = {
 		//合成プロセスに関する部分
 		"lock"   : 1,
 		"intervalTime": 1000,
-		"option":{
-			"speedScale": "1",
-			"pitchScale": "0",
-			"intonationScale": "1",
-			"volumeScale": "1",
-			"prePhonemeLength": "0.1",
-			"postPhonemeLength": "0.1",
-			"outputSamplingRate": "24000",
-			"outputStereo": false,
+		"options":{
+			"outputStereo": "false"
 		}
 	},
 	"start": function(text,speaker){
@@ -337,8 +330,9 @@ expressApp.get('/settings', (req, res) => {
 				playing : playing.settings,
 				voicevox: {
 					settings: voicevox.settings,
-					speakers: voicevox.speakers
-				}
+					speakers: voicevox.speakers,
+					outputStereo: JSON.parse(voicevox.settings.options.outputStereo) //文字列のfalseではhandlebarsでtrue扱いになってしまうため
+				}		//複数出てきたらtoBooleanとかで固めるかもしれない
 			});
 	});
 });
@@ -406,11 +400,21 @@ expressApp.use(express.static(expressPath.static));
 //設定とかのあれ
 expressApp.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded　ニセトランスルー機能つけようと思ったときにぶつからないかな……？
 expressApp.post('/set', (req, res) => {
-  console.log('--- post() /set called ---');
-  console.log(req.body);
-  Object.assign(playing.settings,req.body.playing);//playing
-  Object.assign(voicevox.settings,req.body.voicevox);//VOICEVOX
-  res.redirect('/?finished=true')
+	console.log('--- post() /set called ---');
+	for(entry in req.body){for(key in req.body[entry]){		//２階層目でのみ
+		if(req.body[entry][key] === ""){delete req.body[entry][key];}
+	}}
+	for(property in req.body.voicevox.options){				//assignする前に無いものを消しておく
+		if(req.body.voicevox.options[property] === ""){
+			delete voicevox.settings.options[property];
+			delete req.body.voicevox.options[property];
+		}
+	}
+	console.log(req.body);
+	Object.assign(playing.settings,req.body.playing);//playing
+	Object.assign(voicevox.settings,req.body.voicevox);//VOICEVOX
+	res.redirect('/?finished=true')
+	console.log(voicevox.settings.options.outputStereo);
 })
 
 ready.IntervalID = setInterval(ready.go,100);

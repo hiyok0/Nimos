@@ -3,14 +3,17 @@
 <head>
 	{{> defaultHead }}
 	<style>
-		.hontai td:nth-of-type(1){text-align:right;}
+		.hontai td:nth-of-type(1){
+			text-align:right;
+			width:10rem;
+			}
 	</style>
 	<title>設定 - nusuttoChan</title>
 </head>
 <body>
 	<header>{{> header }}</header>
 	<h1>設定</h1>
-	<form method="POST" action="/set">
+	<form method="POST" action="/set" autocapitalize="none" autocomplete="on">
 		<div id="mainSettings">
 			<h2><i class="ri-home-gear-fill ri-xl"></i>本体設定</h2>
 			<table class="hontai"><tbody>
@@ -21,7 +24,7 @@
 				<tr>
 					<td>Interval Time</td>
 					<td>
-						<input type="number" name="playing[intervalTime]" value="{{playing.intervalTime}}" />
+						<input type="number" name="playing[intervalTime]" placeholder="{{playing.intervalTime}}" />
 						<i class="ri-skull-2-fill"></i>
 					</td>
 				</tr>
@@ -65,15 +68,40 @@
 				</tr>
 				<tr>
 					<td>話速</td>
-					<td><input type="number" placeholder="未実装" /></td>
+					<td><input name="voicevox[options][speedScale]" type="number" step="0.001" placeholder="初期値: 1.0" value="{{voicevox.settings.options.speedScale}}" /></td>
 				</tr>
 				<tr>
 					<td>ピッチ</td>
-					<td><input type="number" placeholder="未実装" /></td>
+					<td><input name="voicevox[options][pitchScale]" type="number" step="0.001" placeholder="初期値: 0.0" value="{{voicevox.settings.options.pitchScale}}" /></td>
 				</tr>
 				<tr>
 					<td>抑揚</td>
-					<td><input type="number" placeholder="未実装" /></td>
+					<td><input name="voicevox[options][intonationScale]" type="number" step="0.001" placeholder="初期値: 1.0" value="{{voicevox.settings.options.intonationScale}}" /></td>
+				</tr>
+				<tr>
+					<td>音量</td>
+					<td><input name="voicevox[options][volumeScale]" type="number" step="0.001" placeholder="初期値: 1.0" value="{{voicevox.settings.options.volumeScale}}"</td>
+				</tr>
+				<tr>
+					<td>前の無音時間</td>
+					<td><input name="voicevox[options][prePhonemeLength]" type="number" step="0.001" placeholder="初期値: 0.1" value="{{voicevox.settings.options.prePhonemeLength}}"</td>
+				</tr>
+				<tr>
+					<td>後の無音時間</td>
+					<td><input name="voicevox[options][postPhonemeLength]" type="number" step="0.001" placeholder="初期値: 0.1" value="{{voicevox.settings.options.postPhonemeLength}}"</td>
+				</tr>
+				<tr>
+					<td>サンプリングレート</td><!--本当はcssで消すべきかもだけど面倒くさいので↓-->
+					<td><input name="voicevox[options][outputSamplingRate]" type="text" placeholder="初期値: 24000" value="{{voicevox.settings.options.outputSamplingRate}}"</td>
+				</tr>
+				<tr>
+					<td>ステレオ出力</td>
+					<td>
+						<input name="voicevox[options][outputStereo]" type="radio" id="false" value="false" {{#unless voicevox.outputStereo}}checked{{/unless}} >
+						<label for="false">無効(推奨)</label>
+						<input name="voicevox[options][outputStereo]" type="radio" id="true"  value="true" {{#if voicevox.outputStereo}}checked{{/if}} >
+						<label for="true">有効</label>
+					</td>
 				</tr>
 				<tr>
 					<td>語尾追加</td>
@@ -82,14 +110,14 @@
 				<tr>
 					<td>同時合成数</td>
 					<td>
-						<input type="number" name="voicevox[lock]" value="{{voicevox.settings.lock}}" />
+						<input type="number" name="voicevox[lock]" placeholder="{{voicevox.settings.lock}}" />
 						<i class="ri-skull-2-fill"></i>
 					</td>
 				</tr>
 				<tr>
 					<td>Interval Time</td>
 					<td>
-						<input type="number" name="voicevox[intervalTime]" value="{{voicevox.settings.intervalTime}}" />
+						<input type="number" name="voicevox[intervalTime]" placeholder="{{voicevox.settings.intervalTime}}" />
 						<i class="ri-skull-2-fill"></i>
 					</td>
 				</tr>
