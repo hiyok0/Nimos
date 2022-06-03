@@ -281,8 +281,8 @@ const playing = {
 		playing.clearQueues();
 	});
 	//話者リストを返す（仮）こういうのじゃなくて対応表はユーザに作らせてもいいかもしれない。
-	expressApp.get("/speakers", function(req, res) {
-		console.log('--- get() /speakers called ---');
+	expressApp.get("/GetVoiceList", function(req, res) {
+		console.log("/GetVoiceList called. Return speakers list.");
 		axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers")
 		.then( speakersList => {
 			console.log(speakersList.data);
@@ -293,7 +293,9 @@ const playing = {
 					let style = washa.styles.shift();
 					resData.push({
 						"id": parseFloat(style.id) + 0,		//帰ってきたときにこっちがもっと処理しやすい形はなんだろう。
-						"name": "VOICEVOX："+washa.name+"（"+style.name+"）"
+						"kind": "VOICEVOX",
+						"name": "VOICEVOX："+washa.name+"（"+style.name+"）",
+						"alias": ""
 					});
 				}
 			}
