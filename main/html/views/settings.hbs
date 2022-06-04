@@ -7,6 +7,9 @@
 			text-align:right;
 			width:10rem;
 			}
+		.hontai input[type="number"], .hontai input[type="text"]{
+			width: 80%;
+			}
 	</style>
 	<title>設定 - nusuttoChan</title>
 </head>
@@ -23,8 +26,14 @@
 				</tr>
 				<tr>
 					<td>Interval Time</td>
+					<td><input type="number" name="playing[intervalTime]" placeholder="{{playing.intervalTime}}" />
+						<i class="ri-skull-2-fill"></i>
+					</td>
+				</tr>
+				<tr>
+					<td>Listen PORT</td>
 					<td>
-						<input type="number" name="playing[intervalTime]" placeholder="{{playing.intervalTime}}" />
+						<input type="number" name="port" placeholder="次回起動時に反映されます。" />
 						<i class="ri-skull-2-fill"></i>
 					</td>
 				</tr>

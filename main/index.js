@@ -19,16 +19,38 @@ import p from 'process';
 */
 
 const ready = {
-	"status": false,
+	"settings": false,
+	"server": false,
 	"port": null,
+	"listen":function (startPort){
+		portfinder.getPortPromise({
+			port: startPort
+		})
+		.then((availablePort) => {
+			server = expressApp.listen(availablePort, function(){
+				console.log("nusuttoChan is listening to PORT:" + server.address().port);
+				//オープンソースソフトウェアライセンス
+				console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
+				//splashからメイン画面に
+				Object.assign(ready, {
+					"server": true,
+					"port": server.address().port
+				});
+			});
+		})
+		.catch((err) => {
+			dialog.showErrorBox("Failed to find available port.", err);
+			//app.quit();
+		});
+	},
 	"go"	: function(){
-		if (ready.status){
+		if (ready.server){
 			clearInterval(ready.IntervalID);
 			//splashWindow.destroy();
 			generateMainWindow();
 		}
 	},
-	"IntervalID": null
+	"IntervalID":  null
 }
 
 //electron（splash＋最初のelectron）
@@ -50,26 +72,10 @@ app.on('window-all-closed', () => {}) //こうするとなんかうまくいく
 const expressApp = express();
 let server ;
 let startPort = 50080;		//設定ファイルを作った時は項目の有無とか考えてもいいかもしれない
-portfinder.getPortPromise({
-	port: startPort
-})
-.then((availablePort) => {
-	server = expressApp.listen(availablePort, function(){
-		console.log("nusuttoChan is listening to PORT:" + server.address().port);
-		//オープンソースソフトウェアライセンス
-		console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
-		//splashからメイン画面に
-		Object.assign(ready, {
-			"status": true,
-			"port": server.address().port
-		});
-	});
-})
-.catch((err) => {
-	dialog.showErrorBox("Failed to find available port.", err);
-	//app.quit();
-});
+ready.listen(startPort);
 
+
+/*
 function setListenPort(port){					//SyntaxError: Unexpected token '.'
 	switch (isNaN(port)) {
 		case false:
@@ -88,7 +94,7 @@ function setListenPort(port){					//SyntaxError: Unexpected token '.'
 			if (port == void 0){}else{console.log("Not a Number");}
 			return 50080;
 	}
-}
+}*/
 
 //electron（メイン？）
 function generateMainWindow() {
@@ -332,7 +338,7 @@ expressApp.get('/settings', (req, res) => {
 		console.log("requesting speaker list of voicevox is failed.");
 		voicevox.speakers = [{
 				"name"  : "ERROR",
-				"styles": [{"id": 1,"name":"話者リストを取得できませんでした。"}]
+				"styles": [{"id": voicevox.settings.speaker,"name":"取得できませんでした。"}]
 			}];
 	})
 	.finally(() => {
@@ -354,7 +360,7 @@ expressApp.get("/", (req, res) => {
 	console.log("/ is called");
 	const resObj = {
 		"appName": app.name,
-		"port": ready.port,
+		"port": server.address().port,
 		"processVersions": process.versions,
 		"nusuttoChanVersion": process.env.npm_package_version,
 		"menu": [
@@ -401,6 +407,9 @@ expressApp.get("/", (req, res) => {
 				"color": "dodgerblue"
 			}]
 	};
+	if( server.address().port !== ready.port ){
+		resObj.port = resObj.port + "(--> "+ready.port+")"
+	}
 	if(req.query.finished == true || req.query.finished == "true"){
 		resObj.finished = true
 	}else{ resObj.finished = false};
@@ -423,6 +432,7 @@ expressApp.post('/set', (req, res) => {
 	console.log(req.body);
 	Object.assign(playing.settings,req.body.playing);//playing
 	Object.assign(voicevox.settings,req.body.voicevox);//VOICEVOX
+	if(Number(req.body.port) > 1023){ready.port = req.body.port};//Number("") == 0 らしいので
 	res.redirect('/?finished=true')
 	console.log(voicevox.settings.options.outputStereo);
 })

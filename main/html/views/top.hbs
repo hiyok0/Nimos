@@ -28,11 +28,12 @@
 			margin: 1rem 1.5rem 0.2rem;
 			border-radius: 0.2em;
 		}
-		#showPortNumber {
-			display: none;
-			width: 15rem;
+		#showPortNumber {display: none;}
+		.message{
+			width: 80%;
+			min-width: 7rem;
 			margin: 0.5rem auto 1rem;
-			padding 1rem;
+			padding 1rem 2rem;
 			border-radius: 0.2em;
 			background-color: goldenrod;
 			text-align: center;
@@ -41,6 +42,11 @@
 	<header>
 		<i class="ri-tools-fill ri-lg"></i>nusuttoChan<i class="ri-at-line"></i>{{ nusuttoChanVersion }} Web<i class="ri-question-mark"></i> UI
 	</header>
+	{{#if finished}}
+	<div class="message">
+		Applied!
+	</div>
+	{{/if}}
 	<div class="flex">
 		{{#each menu}}
 			<A href="{{this.link}}">
@@ -49,7 +55,7 @@
 			</A>
 		{{/each}}
 	</div>
-	<div id="showPortNumber">Port Number: {{port}}</div>
+	<div id="showPortNumber" class="message">Port Number: {{port}}</div>
 	<div>working on node v{{ processVersions.node }}</div>
 </body>
 <script>if (navigator.userAgent.indexOf( "{{ appName }}" ) + 1 ) {document.getElementById("showPortNumber").style.setProperty("display", "block");}</script>
