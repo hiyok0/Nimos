@@ -32,7 +32,7 @@ const ready = {
 			server = expressApp.listen(availablePort, function(){
 				console.log("nusuttoChan is listening to PORT:" + server.address().port);
 				//オープンソースソフトウェアライセンス
-				console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスは同梱のOpenSorceLicenses.txt及びhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
+				console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスはhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
 				//splashからメイン画面に
 				Object.assign(ready, {
 					"server": true,
