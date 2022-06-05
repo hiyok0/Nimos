@@ -61,7 +61,7 @@ const setting = {
 		fs.readFile(app.getPath("userData")+"/settei.json",{encoding: "utf8", flag: "r" },(err, fd) => {
 			if(err){
 				console.log("cannnot read setting file");
-				resolve();
+				resolve(50080); //default port
 			}
 			if(fd){
 				/* 0.xのコードネーム、juncat
@@ -75,7 +75,7 @@ const setting = {
 				voicevox.settings = settingsObj.voicevox;
 				if(settingsObj.port && !isNaN(settingsObj.port)){ready.port = settingsObj;}
 				ready.settings = true;
-				resolve();
+				resolve(Number(settingsObj.port));
 			}
 		});
 	}),
@@ -434,13 +434,7 @@ expressApp.get("/", (req, res) => {
 		"port": server.address().port,
 		"processVersions": process.versions,
 		"nusuttoChanVersion": process.env.npm_package_version,
-		"menu": [
-			{
-				"name": "About",
-				"link": "/pages?page=about",
-				"icon": "passport-line",
-				"color": "lightyellow"
-			},
+		"mainMenu": [
 			{
 				"name": "Settings",
 				"link": "/settings",
@@ -452,6 +446,14 @@ expressApp.get("/", (req, res) => {
 				"link": "/clear",
 				"icon": "delete-bin-2-line",
 				"color": "#cc526a"
+			}
+		],
+		"subMenu": [
+			{
+				"name": "About",
+				"link": "/pages?page=about",
+				"icon": "passport-line",
+				"color": "lightyellow"
 			},
 			{
 				"name": "GitHub",
@@ -464,7 +466,7 @@ expressApp.get("/", (req, res) => {
 				"link": "https://twitter.com/Jewel_Flash",
 				"icon": "twitter-fill",
 				"color": "rgb(91,154,236)"
-			},
+			},/*
 			{
 				//特に理由もないが分けてみる。
 				"name": "Bug Report",
@@ -477,7 +479,7 @@ expressApp.get("/", (req, res) => {
 				"link": "/pages?page=report",
 				"icon": "question-fill",
 				"color":　"#ffccd2"
-			},
+			},*/
 			{
 				"name": "License表示",
 				"link": "/pages?page=opensorcelicenses",
@@ -489,7 +491,8 @@ expressApp.get("/", (req, res) => {
 				"link": "/pages?page=remixiconlisence",
 				"icon": "remixicon-line",
 				"color": "dodgerblue"
-			}]
+			}
+		]
 	};
 	if( server.address().port !== ready.port ){
 		resObj.port = resObj.port + "(--> "+ready.port+")"
@@ -522,7 +525,7 @@ expressApp.post('/set', (req, res) => {
 	setting.save(req.header('User-Agent').indexOf(app.name) + 1);
 })
 
-setting.load.then(() => {ready.listen(50080);});
+setting.load.then(port => {ready.listen(port);});
 ready.IntervalID = setInterval(ready.go,100);
 playing.intervalID = setInterval(playing.main,playing.settings.intervalTime);
 voicevox.synthesis.intervalID = setInterval(voicevox.synthesis.process,voicevox.settings.intervalTime);

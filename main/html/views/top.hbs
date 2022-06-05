@@ -22,40 +22,68 @@
 			text-align: center;
 			text-decoration: none;
 		}
-		.flex A [class^="ri-"]{
-			padding: 0.5rem;
+		.mainMenu A [class^="ri-"]{
+			min-width: 10vw;
+			padding: 1rem 3rem;
+			margin: 0.7rem 1.5rem 0.5rem;
+			border-radius: 0.2em;
+		}
+		.mainMenu .item-name{
+			font-size: 1.2rem;
+		}
+		.subMenu A [class^="ri-"]{
+			padding: 0.7rem 0.5rem 0.3rem;
 			aspect-ratio: 1 / 1;
 			margin: 1rem 1.5rem 0.2rem;
 			border-radius: 0.2em;
 		}
-		#showPortNumber {display: none;}
+		.subMenu .item-name{
+			margin: 0rem 1.5rem 0.2rem;
+			width: 4rem;
+		}
+		#showPortNumber {
+			display: none;
+			background-color: goldenrod;
+			margin: 0.5rem auto 1rem;
+		}
 		.message{
 			width: 80%;
 			min-width: 7rem;
-			margin: 0.5rem auto 1rem;
 			padding 1rem 2rem;
 			border-radius: 0.2em;
-			background-color: goldenrod;
 			text-align: center;
 		}
+		.notification{
+			background-color: darkslateblue;
+			color: ghostwhite;
+			margin: 0.5rem auto 0rem;
+		}
+		
 	</style>
 	<header>
 		<i class="ri-tools-fill ri-lg"></i>nusuttoChan<i class="ri-at-line"></i>{{ nusuttoChanVersion }} Web<i class="ri-question-mark"></i> UI
 	</header>
 	{{#if finished}}
-	<div class="message">
-		Applied!
-	</div>
+		<div class="message notification">Applied!</div>
 	{{/if}}
-	<div class="flex">
-		{{#each menu}}
+	<div id="showPortNumber" class="message">Port Number: {{port}}</div>
+	<div class="flex mainMenu">
+		{{#each mainMenu }}
 			<A href="{{this.link}}">
-				<div class="ri-{{this.icon}} ri-3x" style="background-color:{{this.color}};"></div>
+				<div class="ri-{{this.icon}} ri-4x" style="background-color:{{this.color}};"></div>
 				<div class="item-name">{{this.name}}</div>
 			</A>
 		{{/each}}
 	</div>
-	<div id="showPortNumber" class="message">Port Number: {{port}}</div>
+	<div class="flex subMenu">
+		{{#each subMenu}}
+			<A href="{{this.link}}">
+				<div class="ri-{{this.icon}} ri-2x" style="background-color:{{this.color}};"></div>
+				<div class="item-name">{{this.name}}</div>
+			</A>
+		{{/each}}
+	</div>
+	<div><A href="/pages?page=report"><i class="ri-questionnaire-line"></i>困ったな、<i class="ri-bug-line"></i>バグかなと思った時はこちら</A></div>
 	<div>working on node v{{ processVersions.node }}</div>
 </body>
 <script>if (navigator.userAgent.indexOf( "{{ appName }}" ) + 1 ) {document.getElementById("showPortNumber").style.setProperty("display", "block");}</script>
