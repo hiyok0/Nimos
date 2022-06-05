@@ -6,6 +6,7 @@ const hbs = require("hbs");
 const { app, Menu, BrowserWindow, dialog } = require("electron");
 const childProcess = require("child_process");
 const path = require("path")
+const fs = require("fs");
 
 //import post from "axios.post";
 /*
@@ -18,10 +19,11 @@ import childProcess from 'child_process';
 import p from 'process';
 */
 
+//準備用
 const ready = {
 	"settings": false,
 	"server": false,
-	"port": null,
+	"port": 50080, //デフォルトポート
 	"listen":function (startPort){
 		portfinder.getPortPromise({
 			port: startPort
@@ -39,7 +41,7 @@ const ready = {
 			});
 		})
 		.catch((err) => {
-			dialog.showErrorBox("Failed to find available port.", err);
+			dialog.showErrorBox("Failed to find available port.",`${err}`);
 			//app.quit();
 		});
 	},
@@ -51,6 +53,49 @@ const ready = {
 		}
 	},
 	"IntervalID":  null
+}
+
+//設定ファイル関連
+const setting = {
+	"load": new Promise((resolve, reject) => {
+		fs.readFile(app.getPath("userData")+"/settei.json",{encoding: "utf8", flag: "r" },(err, fd) => {
+			if(err){
+				console.log("cannnot read setting file");
+				resolve();
+			}
+			if(fd){
+				/* 0.xのコードネーム、juncat
+				 * その構造が最初に採用されたバージョンのコードネーム.プロファイル名
+				 * プロファイル切り替えは未実装
+				 */
+				const settingsObj = JSON.parse(fd).juncat.default;
+				console.log(settingsObj);
+				//for(e of ["playing","voicevox"]){Object.assign([e].settings,settingsObj[e]);}
+				playing.settings  = settingsObj.playing;
+				voicevox.settings = settingsObj.voicevox;
+				if(settingsObj.port && !isNaN(settingsObj.port)){ready.port = settingsObj;}
+				ready.settings = true;
+				resolve();
+			}
+		});
+	}),
+	"save": function(isInApp){
+		fs.writeFile(app.getPath("userData")+"/settei.json", JSON.stringify({
+			"juncat": { "default": {
+			"playing" : playing.settings,
+			"voicevox": voicevox.settings,
+			"port"	  : ready.port
+			}}
+		}),
+		{
+			encoding: "utf8",
+			flag:     "w"
+		},
+		err => {
+			if(err && isInApp){dialog.showErrorBox("Failed to write settei.json",`${err}`);}
+			//アプリ外から実行したときにどうにかならんか……
+		})
+	}
 }
 
 //electron（splash＋最初のelectron）
@@ -70,10 +115,8 @@ app.on('window-all-closed', () => {}) //こうするとなんかうまくいく
 
 //express
 const expressApp = express();
-let server ;
-let startPort = 50080;		//設定ファイルを作った時は項目の有無とか考えてもいいかもしれない
-ready.listen(startPort);
-
+let server ;	//設定ファイルを作った時は項目の有無とか考えてもいいかもしれない
+//ready.listen(ready.port);
 
 /*
 function setListenPort(port){					//SyntaxError: Unexpected token '.'
@@ -101,7 +144,7 @@ function generateMainWindow() {
 	const createWindow = () => {
 	  // ブラウザウインドウを作成します。
 		const mainWindow = new BrowserWindow({
-			width: 500,
+			width: 480,
 			height: 800,
 		})
 	
@@ -138,6 +181,12 @@ function generateMainWindow() {
 				{ role:'cut',   label:'切り取り' },
 				{ role:'copy',  label:'コピー' },
 				{ role:'paste', label:'貼り付け' },
+			]
+		},
+		{
+			label: "表示",
+			submenu: [
+				{ role: "reload", label: "ページを再読み込み"}
 			]
 		}
 	]));
@@ -435,8 +484,10 @@ expressApp.post('/set', (req, res) => {
 	if(Number(req.body.port) > 1023){ready.port = req.body.port};//Number("") == 0 らしいので
 	res.redirect('/?finished=true')
 	console.log(voicevox.settings.options.outputStereo);
+	setting.save(req.header('User-Agent').indexOf(app.name) + 1);
 })
 
+setting.load.then(() => {ready.listen(ready.port);});
 ready.IntervalID = setInterval(ready.go,100);
 playing.intervalID = setInterval(playing.main,playing.settings.intervalTime);
 voicevox.synthesis.intervalID = setInterval(voicevox.synthesis.process,voicevox.settings.intervalTime);
