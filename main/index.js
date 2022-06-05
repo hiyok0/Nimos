@@ -3,7 +3,7 @@ const axios = require("axios");
 const express = require("express");
 const portfinder = require("portfinder");
 const hbs = require("hbs");
-const { app, Menu, BrowserWindow, dialog } = require("electron");
+const { app, Menu, BrowserWindow, dialog, shell } = require("electron");
 const childProcess = require("child_process");
 const path = require("path")
 const fs = require("fs");
@@ -405,6 +405,28 @@ expressApp.get("/pages",(req, res) => {
 	console.log("pages?page="+req.query.page+" is called!");
 	res.render("pages/"+req.query.page);
 });
+expressApp.get("/contact", (req, res) => {
+	console.log("contact?on="+req.query.on+" is called!");
+	const links = {
+		"Twitter": "https://twitter.com/intent/tweet?text=%40Jewel_Flash%20%40JeweI_Flash",
+		"GoogleForm": "http://example.com",
+		"GitHubIssue": "https://github.com/hiyok0/nusuttoChan/issues/new/choose",
+		"Discord": "https://discord.com/invite/V8dj25rFEX"	//将来的には別のところを噛ませたい。GASでも可
+	}
+	switch ((req.header('User-Agent').indexOf(app.name) > -1)+""+(req.query.on !== void 0)) {
+		/* true ---> アプリ内から
+		 * false --> アプリ外から*/
+		case "truetrue":
+			shell.openExternal(links[req.query.on],{active: true})
+			res.redirect("/");
+			break;
+		case "falsetrue":
+			res.redirect(links[req.query.on]);
+			break;
+		default:
+			res.redirect("/pages?page=report");
+	}
+});
 expressApp.get("/", (req, res) => {
 	console.log("/ is called");
 	const resObj = {
@@ -442,6 +464,19 @@ expressApp.get("/", (req, res) => {
 				"link": "https://twitter.com/Jewel_Flash",
 				"icon": "twitter-fill",
 				"color": "rgb(91,154,236)"
+			},
+			{
+				//特に理由もないが分けてみる。
+				"name": "Bug Report",
+				"link": "/pages?page=report",
+				"icon": "bug-fill",
+				"color": "lightgray"
+			},
+			{
+				"name": "Ask hiyoko",
+				"link": "/pages?page=report",
+				"icon": "question-fill",
+				"color":　"#ffccd2"
 			},
 			{
 				"name": "License表示",
@@ -487,7 +522,7 @@ expressApp.post('/set', (req, res) => {
 	setting.save(req.header('User-Agent').indexOf(app.name) + 1);
 })
 
-setting.load.then(() => {ready.listen(ready.port);});
+setting.load.then(() => {ready.listen(50080);});
 ready.IntervalID = setInterval(ready.go,100);
 playing.intervalID = setInterval(playing.main,playing.settings.intervalTime);
 voicevox.synthesis.intervalID = setInterval(voicevox.synthesis.process,voicevox.settings.intervalTime);
