@@ -87,7 +87,13 @@
 		{{/each}}
 	</div>
 	<div><A href="/pages?page=report"><i class="ri-questionnaire-line"></i>困ったな、<i class="ri-bug-line"></i>バグかなと思った時はこちら</A></div>
-	<div>working on node v{{ processVersions.node }}</div>
+	<div>
+		working on 
+			node v{{ processVersions.node }},　
+			V8 v{{ processVersions.v8 }},　
+			Electron v{{ processVersions.electron }},　
+			Chromium v{{ processVersions.chrome }}
+	</div>
 </body>
 <script>if (navigator.userAgent.indexOf( "{{ appName }}" ) + 1 ) {document.getElementById("showPortNumber").style.setProperty("display", "block");}</script>
 </html>
