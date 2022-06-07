@@ -216,6 +216,7 @@ const voicevox = {
 		//合成プロセスに関する部分
 		"lock"   : 1,
 		"intervalTime": 1000,
+		"maxQueues": "20",
 		"options":{
 			"outputStereo": "false"
 		}
@@ -246,7 +247,7 @@ const voicevox = {
 		"lock": 0,
 		"intervalID": null,
 		"process": function() {
-			while(voicevox.synthesis.queues.length && voicevox.synthesis.lock < voicevox.settings.lock ){
+			while(voicevox.synthesis.queues.length && voicevox.synthesis.lock < voicevox.settings.lock /*&& playing.queues.length <= voicevox.settings.maxQueues*/ ){
 				voicevox.synthesis.lock++;
 				const queryObj = voicevox.synthesis.queues.shift();
 				console.log("Synthesis request is being sent!");
@@ -289,13 +290,15 @@ const voicevox = {
 const playing = {
 	"settings" : {
 		"command": "/usr/local/bin/mpv -",
-		"intervalTime": 500
+		"intervalTime": 500,
+		"maxWaitNum": 3
 	},
 	"queues":[],
 	"lock": false,
 	"intervalID": null,
 	"main": async function(){
-		while(playing.queues.length && !playing.lock){
+		while(/*(playing.queues.length > playing.settings.maxWaitNum) ||*/ (playing.queues.length && !playing.lock)){
+			// console.log("playing.settings.maxWaitNum: "+playing.settings.maxWaitNum); == undefined
 			playing.lock = true;
 			const saisei = childProcess.exec(playing.settings.command, function(err, result) {
 				if (err) return console.log(err);
@@ -416,7 +419,8 @@ expressApp.get("/contact", (req, res) => {
 	}
 	switch ((req.header('User-Agent').indexOf(app.name) > -1)+""+(req.query.on !== void 0)) {
 		/* true ---> アプリ内から
-		 * false --> アプリ外から*/
+		 * false --> アプリ外から
+		 * 条件 (三項) 演算子使え*/
 		case "truetrue":
 			shell.openExternal(links[req.query.on],{active: true})
 			res.redirect("/");
