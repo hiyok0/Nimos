@@ -409,9 +409,10 @@ expressApp.get("/contact", (req, res) => {
 	console.log("contact?on="+req.query.on+" is called!");
 	const links = {
 		"Twitter": "https://twitter.com/intent/tweet?text=%40Jewel_Flash%20%40JeweI_Flash",
-		"GoogleForm": "http://example.com",
+		"GoogleForm": "https://docs.google.com/forms/d/e/1FAIpQLSdKhOCD_lNTRkiFTlN8EBMSuZUH-ikkNt94Vv4XySZwbi8YSQ/viewform?usp=pp_url&entry.1513291423="+app.getVersion(),
 		"GitHubIssue": "https://github.com/hiyok0/nusuttoChan/issues/new/choose",
-		"Discord": "https://discord.com/invite/V8dj25rFEX"	//将来的には別のところを噛ませたい。GASでも可
+		"DiscordInvite": "https://discord.com/invite/CgVzQNXSnS"	//将来的には別のところを噛ませたいかも。GASでも可
+		"DiscordIntro": "http://example.com/"
 	}
 	switch ((req.header('User-Agent').indexOf(app.name) > -1)+""+(req.query.on !== void 0)) {
 		/* true ---> アプリ内から
