@@ -8,7 +8,7 @@
 　想定環境は特に無いけどとりあえずmacとか(?)
 
 ### Screenshots
-![nusuttoChan screenshots at f3c728128b72a74385560bae245c70c7a75cdfc8](https://i.imgur.com/MXvHYc0.jpg)
+![nusuttoChan screenshots at e85d6f9](https://i.imgur.com/34qPo39.png)
 開発し始めたばかりのため見た目が大幅に変わる可能性もあります。
 
 ## 使い方
