@@ -30,7 +30,7 @@ const ready = {
 		})
 		.then((availablePort) => {
 			server = expressApp.listen(availablePort, function(){
-				console.log("nusuttoChan is listening to PORT:" + server.address().port);
+				console.log(name.app+" is listening to PORT:" + server.address().port);
 				//オープンソースソフトウェアライセンス
 				console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスはhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
 				//splashからメイン画面に
@@ -156,7 +156,7 @@ function generateMainWindow() {
 		version: app.getVersion()+" on "+process.platform.replace("darwin", "macOS"),
 		credits: "hiyoko Project",
 		authors: ["hiyoko","sekaii"],
-		website: "https://github.com/hiyok0/nusuttoChan",
+		website: "https://github.com/hiyok0/Nimos",
 		iconPath: path.join(__dirname, "./html/static/assets/icon.png")
 	})
 	Menu.setApplicationMenu(Menu.buildFromTemplate([
@@ -328,13 +328,13 @@ const playing = {
 				"volumeScale": req.query.volume
 			}
 		});
-		res.send("nusuttoChan");//一応設定可能にしてもいいかもしれない
+		res.send(app.name);//一応設定可能にしてもいいかもしれない
 	});
 	//キューのクリア **重要**
 	expressApp.get("/clear", function(req, res) {
 		console.log("--- get() /clear called ---");
 		if(req.header('User-Agent').indexOf("live-comment-viewer") + 1){
-			res.send("nusuttoChan");//一応設定可能にしてもいいかもしれない
+			res.send(app.name);//一応設定可能にしてもいいかもしれない
 		}else{
 			res.redirect('/?finished=true');
 		}
@@ -413,7 +413,7 @@ expressApp.get("/contact", (req, res) => {
 	const links = {
 		"Twitter": "https://twitter.com/intent/tweet?text=%40Jewel_Flash%20%40JeweI_Flash",
 		"GoogleForm": "https://docs.google.com/forms/d/e/1FAIpQLSdKhOCD_lNTRkiFTlN8EBMSuZUH-ikkNt94Vv4XySZwbi8YSQ/viewform?usp=pp_url&entry.1513291423="+app.getVersion(),
-		"GitHubIssue": "https://github.com/hiyok0/nusuttoChan/issues/new/choose",
+		"GitHubIssue": "https://github.com/hiyok0/Nimos/issues/new/choose",
 		"DiscordInvite": "https://discord.com/invite/CgVzQNXSnS",	//将来的には別のところを噛ませたいかも。GASでも可
 		"DiscordIntro": "http://example.com/"
 	}
@@ -462,7 +462,7 @@ expressApp.get("/", (req, res) => {
 			},
 			{
 				"name": "GitHub",
-				"link": "https://github.com/hiyok0/nusuttoChan/",
+				"link": "https://github.com/hiyok0/Nimos/",
 				"icon": "github-fill",
 				"color": "white"
 			},
