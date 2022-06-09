@@ -30,7 +30,7 @@ const ready = {
 		})
 		.then((availablePort) => {
 			server = expressApp.listen(availablePort, function(){
-				console.log(name.app+" is listening to PORT:" + server.address().port);
+				console.log("Nimos is listening to PORT:" + server.address().port);
 				//オープンソースソフトウェアライセンス
 				console.log("このアプリケーションにはオープンソースの成果物が含まれています。\nライセンスはhttp://localhost:"+server.address().port+"/opensorcelicensesより確認可能です。");
 				//splashからメイン画面に
@@ -409,10 +409,12 @@ expressApp.get("/pages",(req, res) => {
 	res.render("pages/"+req.query.page);
 });
 expressApp.get("/contact", (req, res) => {
-	console.log("contact?on="+req.query.on+" is called!");
+	console.log("contact?on="+req.query.on+" is called!");		//問い合わせ用に作った名残り、将来的に/openかなにかでまとめる。
 	const links = {
 		"Twitter": "https://twitter.com/intent/tweet?text=%40Jewel_Flash%20%40JeweI_Flash",
+		"Jewel_Flash": "https://twitter.com/Jewel_Flash",
 		"GoogleForm": "https://docs.google.com/forms/d/e/1FAIpQLSdKhOCD_lNTRkiFTlN8EBMSuZUH-ikkNt94Vv4XySZwbi8YSQ/viewform?usp=pp_url&entry.1513291423="+app.getVersion(),
+		"GitHub": "https://github.com/hiyok0/Nimos/",
 		"GitHubIssue": "https://github.com/hiyok0/Nimos/issues/new/choose",
 		"DiscordInvite": "https://discord.com/invite/CgVzQNXSnS",	//将来的には別のところを噛ませたいかも。GASでも可
 		"DiscordIntro": "http://example.com/"
@@ -462,13 +464,13 @@ expressApp.get("/", (req, res) => {
 			},
 			{
 				"name": "GitHub",
-				"link": "https://github.com/hiyok0/Nimos/",
+				"link": "/contact?on=GitHub",
 				"icon": "github-fill",
 				"color": "white"
 			},
 			{
 				"name": "Twitter",
-				"link": "https://twitter.com/Jewel_Flash",
+				"link": "/contact?on=Jewel_Flash",
 				"icon": "twitter-fill",
 				"color": "rgb(91,154,236)"
 			},/*
