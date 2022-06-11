@@ -210,7 +210,7 @@ const voicevox = {
 		//全体
 		"address": "localhost",
 		"port"   : "50021",
-		"speaker": "14",
+		"speaker": "3",
 		//クエリの編集
 		//speed,pitch,抑揚
 		//合成プロセスに関する部分
