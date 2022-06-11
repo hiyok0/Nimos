@@ -1,0 +1,33 @@
+on:
+  release:
+    types:
+    - published
+
+name: Release published
+jobs:
+  publish:
+    name: notification to discord via slack format
+    runs-on: ubuntu-latest
+    steps:
+    - id: get_release_note
+      name: echo release note
+      run: |
+        # 改行コードをエスケープする
+        release_body='${{ github.event.release.body }}'
+        release_body=${release_body//$'\r\n'/\\n}
+        release_body=${release_body//$'\n'/\\n}
+        echo "::set-output name=body::$release_body"
+    - name: Send GitHub Action trigger data to discord workflow
+      id: slack_notification
+      uses: slackapi/slack-github-action@v1.16.0
+      with:
+        payload: |
+          {
+            "text":
+             ":writing_hand: ビルド結果: ${{ job.status }}\n
+            ${{ github.event.release.html_url }}\n
+            ```${{ steps.get_release_note.outputs.body }}```"
+          }
+      env:
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}/slack
