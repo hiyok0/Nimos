@@ -27,12 +27,6 @@ jobs:
         with:
           name: nusuttoChan_${{ github.sha }}
           path: nusuttoChan/out/make/zip/darwin/x64/Nimos-darwin-x64-*.zip
-          
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@main
-        with:
-          path: nusuttoChan/main
       
       - name: MakeARelease
         uses: CupOfTea696/gh-action-auto-release@v1.0.0
