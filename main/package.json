@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "A way you use VOICEVOX with OneComme.",
   "main": "index.js",
-  "scripts": {
+  "scripts": { 
     "oldstart": "node index.js",
     "start": "electron-forge start",
     "electron": "electron .",
