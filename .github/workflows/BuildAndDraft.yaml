@@ -13,11 +13,10 @@ jobs:
         with:
           node-version: 16
       - run: |
-          npm i -g npm-license-generator &
+          npm i -g npm-license-generator 
           git clone https://github.com/hiyok0/nusuttoChan.git
           cd nusuttoChan/main
           npm ci
-          $!
           npm-license-generator --template ../template.hbs --package-lock --out-path ./html/static/opensorcelicenses/index.html
           #一応実行↓
           npx electron-forge import
