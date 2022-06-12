@@ -440,7 +440,7 @@ expressApp.get("/", (req, res) => {
 		"appName": app.name,
 		"port": server.address().port,
 		"processVersions": process.versions,
-		"nusuttoChanVersion": process.env.npm_package_version,
+		"nusuttoChanVersion": app.getVersion(),
 		"mainMenu": [
 			{
 				"name": "Settings",
