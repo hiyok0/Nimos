@@ -25,8 +25,8 @@ jobs:
           
       - uses: actions/upload-artifact@v3
         with:
-          name: nusuttoChan_${{ github.sha }}
-          path: nusuttoChan/out/make/zip/darwin/x64/Nimos-darwin-x64-*.zip
+          name: Nimos_${{ github.sha }}
+          path: Nimos/out/make/zip/darwin/x64/Nimos-darwin-x64-*.zip
       
       - name: MakeARelease
         uses: CupOfTea696/gh-action-auto-release@v1.0.0
