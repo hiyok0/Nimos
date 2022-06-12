@@ -21,7 +21,7 @@ jobs:
           #一応実行↓
           npx electron-forge import
           npm run make
-          cp out/make/zip/darwin/x64/nimos-darwin-x64-*.zip ../nimos-darwin-x64.zip
+          cp out/make/zip/darwin/x64/Nimos-darwin-x64-*.zip ../Nimos-darwin-x64.zip
           
       - uses: actions/upload-artifact@v3
         with:
@@ -49,7 +49,7 @@ jobs:
         if: ${{ steps.MakeARelease.released }}
         with:
           path: |
-            Nimos/nimos-darwin-x64.zip
+            Nimos/Nimos-darwin-x64.zip
           upload-release-files: true
           release-upload-url: ${{ steps.MakeARelease.upload_url }}
         env:
