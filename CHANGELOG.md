@@ -1,6 +1,13 @@
 # Changelog
 Some notable changes to this project may be documented in this file.
 
+## v0.0.3
+CHANGELOG.mdの書き忘れを訂正
+
+## v0.0.2
+パッケージをアップデート（2022年11月4日）
+abputページの遷移を修正。
+
 ## v0.0.1
 ### 1st Release
 Now on Release.
