@@ -2,7 +2,7 @@
   "name": "nimos",
   "productName": "Nimos",
   "version": "0.0.2",
-  "description": "",
+  "description": "A way you use VOICEVOX with OneComme.",
   "main": "index.js",
   "scripts": {
     "start": "electron-forge start",
