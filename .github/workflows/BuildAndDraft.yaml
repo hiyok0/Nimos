@@ -18,8 +18,6 @@ jobs:
           cd Nimos/main
           npm ci
           npm-license-generator --template ../template.hbs --package-lock --out-path ./html/static/opensorcelicenses/index.html
-          #一応実行↓
-          npx electron-forge import
           npm run make
           cp out/make/zip/darwin/x64/Nimos-darwin-x64-*.zip ../Nimos-darwin-x64.zip
           
