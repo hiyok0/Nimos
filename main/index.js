@@ -417,7 +417,8 @@ expressApp.get("/contact", (req, res) => {
 		"GitHub": "https://github.com/hiyok0/Nimos/",
 		"GitHubIssue": "https://github.com/hiyok0/Nimos/issues/new/choose",
 		"DiscordInvite": "https://discord.com/invite/CgVzQNXSnS",	//将来的には別のところを噛ませたいかも。GASでも可
-		"DiscordIntro": "https://nimos.pages.dev/community#discord"
+		"DiscordIntro": "https://nimos.pages.dev/community#discord",
+		"HP": "https://nimos.pages.dev/"
 	}
 	switch ((req.header('User-Agent').indexOf(app.name) > -1)+""+(req.query.on !== void 0)) {
 		/* true ---> アプリ内から

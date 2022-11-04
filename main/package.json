@@ -1,59 +1,36 @@
 {
   "name": "nimos",
   "productName": "Nimos",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A way you use VOICEVOX with OneComme.",
   "main": "index.js",
-  "scripts": { 
-    "oldstart": "node index.js",
+  "scripts": {
     "start": "electron-forge start",
-    "electron": "electron .",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiyok0/Nimos.git"
+  },
   "author": "hiyoko",
+  "bugs": {
+    "url": "https://github.com/hiyok0/Nimos/issues"
+  },
+  "homepage": "https://nimos.pages.dev/",
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.1.3",
     "electron-squirrel-startup": "^1.0.0",
-    "express": "^4.18.1",
+    "express": "^4.18.2",
     "hbs": "^4.2.0",
-    "portfinder": "^1.0.28"
+    "portfinder": "^1.0.32"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.63",
-    "@electron-forge/maker-deb": "^6.0.0-beta.63",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.63",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
-    "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "^19.0.1"
-  },
-  "config": {
-    "forge": {
-      "packagerConfig": {
-        "icon": "../icon.icns"
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "nusuttochan"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+    "@electron-forge/cli": "^6.0.0",
+    "@electron-forge/maker-deb": "^6.0.0",
+    "@electron-forge/maker-rpm": "^6.0.0",
+    "@electron-forge/maker-squirrel": "^6.0.0",
+    "@electron-forge/maker-zip": "^6.0.0",
+    "electron-nightly": "^23.0.0-nightly.20221103"
   }
 }
