@@ -1,6 +1,9 @@
 # Changelog
 Some notable changes to this project may be documented in this file.
 
+## v0.0.4
+アイコンの設定忘れを修正
+
 ## v0.0.3
 CHANGELOG.mdの書き忘れを訂正
 
