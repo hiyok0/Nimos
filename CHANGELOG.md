@@ -1,6 +1,9 @@
 # Changelog
 Some notable changes to this project may be documented in this file.
 
+## v0.0.5
+パッケージのアップデート（2022年11月22日）
+
 ## v0.0.4-1
 workflowの修正
 
