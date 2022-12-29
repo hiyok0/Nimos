@@ -381,7 +381,7 @@ expressApp.set('view engine', 'hbs');
 expressApp.set('views', expressPath.views);
 hbs.registerPartials(expressPath.patrials);
 expressApp.get('/settings', (req, res) => {
-	axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers")
+	axios.get("http://"+voicevox.settings.address+":"+voicevox.settings.port+"/speakers", {timeout: 3000})
 	.then(res => {
 		console.log(res.data)
 		voicevox.speakers = res.data;
