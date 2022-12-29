@@ -1,6 +1,10 @@
 # Changelog
 Some notable changes to this project may be documented in this file.
 
+## v0.0.6
+VOICEVOXが見つからないときに設定画面がなかなか開けなかったのを修正
+パッケージのアップデート（2022年12月29日）
+
 ## v0.0.5
 パッケージのアップデート（2022年11月22日）
 
