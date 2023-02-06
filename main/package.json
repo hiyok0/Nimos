@@ -1,7 +1,7 @@
 {
   "name": "nimos",
   "productName": "Nimos",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A way you use VOICEVOX with OneComme.",
   "main": "index.js",
   "scripts": {
