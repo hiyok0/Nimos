@@ -224,7 +224,7 @@ const voicevox = {
 	"start": function(text,options){
 		const queryQueue = {
 			"speaker": voicevox.settings.speaker,
-			"queue"  : null
+			"query"  : null
 		};
 		if(options.speaker){
 			console.log("speaker: "+options.speaker);
@@ -237,6 +237,9 @@ const voicevox = {
 		.then(res => {
 			console.log(res.data);
 			queryQueue.query = Object.assign(res.data,options.effects);
+			for(const modifies of [voicevox.settings.options, options.effects]){
+				Object.assign(queryQueue.query, modifies);
+			}
 			voicevox.synthesis.queues.push(queryQueue);
 			console.log(queryQueue.query);
 		})
