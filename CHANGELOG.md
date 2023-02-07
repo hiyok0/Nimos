@@ -1,6 +1,9 @@
 # Changelog
 Some notable changes to this project may be documented in this file.
 
+## v0.0.8
+話速とかを反映させるのを実装し忘れてたのを修正
+
 ## v0.0.7
 内部バージョンのアップデート（axios）
 electron-nightlyはアプデするとなぜか動かなくなるのでとりあえず保留
