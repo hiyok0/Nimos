@@ -208,7 +208,7 @@ function generateMainWindow() {
 const voicevox = {
 	"settings": {				//voicevoxの設定は全部ここに
 		//全体
-		"address": "localhost",
+		"address": "127.0.0.1",
 		"port"   : "50021",
 		"speaker": "3",
 		//クエリの編集
