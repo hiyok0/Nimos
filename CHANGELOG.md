@@ -1,6 +1,15 @@
 # Changelog
 Some notable changes to this project may be documented in this file.
 
+## Unreleased
+VOICEVOX表記でなく、VOICEVOX系なら何でも使える的な表記に
+有名なポート番号は手打ちでなくても使えるように
+複数の音声を設定できるように
+
+## v0.0.9
+デフォルトのポート番号をlocalhostから127.0.0.1に
+	* 一部環境で正常動作していなかったので対応
+
 ## v0.0.8
 話速とかを反映させるのを実装し忘れてたのを修正
 
