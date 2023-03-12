@@ -390,7 +390,7 @@ expressApp.get('/settings', (req, res) => {
 		voicevox.speakers = res.data;
 	})
 	.catch(() => {
-		console.log("requesting speaker list of voicevox is failed.");
+		console.log("Failed to request speaker list of voicevox.");
 		voicevox.speakers = [{
 				"name"  : "ERROR",
 				"styles": [{"id": voicevox.settings.speaker,"name":"取得できませんでした。"}]
@@ -398,11 +398,12 @@ expressApp.get('/settings', (req, res) => {
 	})
 	.finally(() => {
 			res.render('settings', {
+				appVersion: app.getVersion(),
 				playing : playing.settings,
 				voicevox: {
 					settings: voicevox.settings,
 					speakers: voicevox.speakers,
-					outputStereo: JSON.parse(voicevox.settings.options.outputStereo) //文字列のfalseではhandlebarsでtrue扱いになってしまうため
+					outputStereo: JSON.parse(voicevox.settings.options.outputStereo) //文字列のfalseではtrue扱いになってしまうため
 				}		//複数出てきたらtoBooleanとかで固めるかもしれない
 			});
 	});

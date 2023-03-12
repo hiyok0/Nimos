@@ -21,6 +21,10 @@
 			<h2><i class="ri-home-gear-fill ri-xl"></i>本体設定</h2>
 			<table class="hontai"><tbody>
 				<tr>
+					<td>本体バージョン</td>
+					<td><input type="text" value="v{{appVersion}}" readonly /></td>
+				</tr>
+				<tr>
 					<td>再生コマンド</td>
 					<td><input type="text" name="playing[command]" value="{{playing.command}}" /></td>
 				</tr>
@@ -114,7 +118,7 @@
 				</tr>
 				<tr>
 					<td>語尾追加</td>
-					<td><input type="text" placeholder="未実装（かわいい補正機能）" style="height:100%;" /></td>
+					<td><input type="text" placeholder="未実装（かわいい補正機能）" style="height:100%;" disabled /></td>
 				</tr>
 				<tr>
 					<td>同時合成数</td>
