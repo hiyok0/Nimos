@@ -5,7 +5,7 @@ const portfinder = require("portfinder");
 const hbs = require("hbs");
 const { app, Menu, BrowserWindow, dialog, shell } = require("electron");
 const childProcess = require("child_process");
-const path = require("path")
+const path = require("path");
 const fs = require("fs");
 
 //import post from "axios.post";
