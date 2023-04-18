@@ -364,14 +364,16 @@ const playing = {
 				}
 			}
 			res.type("json");
-			res.send(JSON.stringify(resData));
+			res.send(JSON.stringify({"voiceList": resData}));
 		})
 		.catch(speakersList => {
 			res.type("json");
-			res.send(JSON.stringify({
+			res.send(JSON.stringify({"voiceList": [{
 				"id": parseFloat(voicevox.settings.speaker) + 0,
-				"name": "話者リストの取得に失敗しました。（［"+speakersList.status+"］"+speakersList.statusText+"）"
-			}));
+				"kind": "error",
+				"name": "話者リストの取得に失敗しました。（［"+speakersList.status+"］"+speakersList.statusText+"）",
+				"alias": ""
+			}]}));
 		});
 	});
 //webUI
