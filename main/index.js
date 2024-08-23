@@ -331,7 +331,7 @@ const playing = {
 				"volumeScale": req.query.volume
 			}
 		});
-		res.send(app.name);//一応設定可能にしてもいいかもしれない
+		res.send(JSON.stringify({appname: "app.name"}));//一応設定可能にしてもいいかもしれない
 	});
 	//キューのクリア **重要**
 	expressApp.get("/clear", function(req, res) {
