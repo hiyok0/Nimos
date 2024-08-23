@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: lts
       - run: |
           npm i -g npm-license-generator 
           git clone https://github.com/hiyok0/Nimos.git
@@ -19,30 +19,22 @@ jobs:
           npm ci
           npm-license-generator --template ../template.hbs --package-lock --out-path ./html/static/opensorcelicenses/index.html
           npm run make
-          cp out/make/zip/darwin/x64/Nimos-darwin-x64-*.zip ../Nimos-darwin-x64.zip
-          
-      - uses: actions/upload-artifact@v3
+          echo nimosVer=$(node -e 'console.log(require("./package.json").version)') >> $GITHUB_ENV
+          echo commitMessage=$(git log --oneline --pretty=format:%s | head -n 1) >> $GITHUB_ENV
+          mv out/make/zip/darwin/x64/Nimos-darwin-x64-*.zip out/make/zip/darwin/x64/Nimos.zip
+      - uses: actions/upload-artifact@v4
         with:
-          name: Nimos_${{ github.sha }}
-          path: Nimos/main/out/make/zip/darwin/x64/Nimos-darwin-x64-*.zip
+          name: Nimos_v${{ env.nimosVer }}.zip
+          path: Nimos/main/out/make/zip/darwin/x64/Nimos.zip
       
-      - name: MakeARelease
-        uses: CupOfTea696/gh-action-auto-release@v1.0.2
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(env.commitMessage, "Release:")
         with:
-          title: "Release: $version"
-          tag: "v$semver"
           draft: true
-          regex: "/^Release: #{semver}$/i"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: UploadArtifactToRelease
-        uses: nanoufo/action-upload-artifacts-and-release-assets@main
-        if: ${{ steps.MakeARelease.released }}
-        with:
-          path: |
-            Nimos/Nimos-darwin-x64.zip
-          upload-release-files: true
-          release-upload-url: ${{ steps.MakeARelease.upload_url }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: true
+          files: Nimos/main/out/make/zip/darwin/x64/Nimos.zip
+          name: "Release: $version"
+          tag_name: "v$semver"
+          repository: hiyok0/Nimos
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: false
