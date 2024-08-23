@@ -33,8 +33,8 @@ jobs:
           draft: true
           prerelease: true
           files: Nimos/main/out/make/zip/darwin/x64/Nimos.zip
-          name: "Release: $version"
-          tag_name: "v$semver"
+          name: Release: ${{ env.nimosVer }}
+          tag_name: "v${{ env.nimosVer }}"
           repository: hiyok0/Nimos
           token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: false
