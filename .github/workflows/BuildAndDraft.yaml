@@ -28,7 +28,7 @@ jobs:
           path: Nimos/main/out/make/zip/darwin/x64/Nimos.zip
       
       - uses: softprops/action-gh-release@v2
-        if: startsWith(env.commitMessage, "Release:")
+        if: startsWith(env.commitMessage, 'Release:')
         with:
           draft: true
           prerelease: true
