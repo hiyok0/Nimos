@@ -7,6 +7,7 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
+    "makeAllMac": "electron-forge make --arch='arm64,x64,universal'",
     "make": "electron-forge make"
   },
   "repository": {
